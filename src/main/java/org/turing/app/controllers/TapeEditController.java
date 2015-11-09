@@ -1,6 +1,6 @@
-package org.turing.controllers;
+package org.turing.app.controllers;
 
-import org.turing.model.ApplicationModel;
+import org.turing.app.model.ApplicationModel;
 
 public class TapeEditController {
     private final ApplicationModel applicationModel;

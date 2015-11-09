@@ -4,27 +4,27 @@
   version="2.0">
   <persistence-unit name="openjpa">
     <provider>org.apache.openjpa.persistence.PersistenceProviderImpl</provider>
-    <class>org.turing.entity.Auditorium</class>
-    <class>org.turing.entity.Booking</class>
-    <class>org.turing.entity.Employee</class>
-    <class>org.turing.entity.GroupTicket</class>
-    <class>org.turing.entity.Marathon</class>
-    <class>org.turing.entity.Movie</class>
-    <class>org.turing.entity.Seat</class>
-    <class>org.turing.entity.Showing</class>
-    <class>org.turing.entity.Ticket</class>
-    <class>org.turing.entity.Patient</class>
-    <class>org.turing.entity.Doctor</class>
-    <class>org.turing.entity.Appointment</class>
-    <class>org.turing.entity.Leave</class>
-    <class>org.turing.entity.Medicine</class>
-    <class>org.turing.entity.Nurse</class>
-    <class>org.turing.entity.Treatment</class>
-    <class>org.turing.entity.User</class>
-    <class>org.turing.entity.Test</class>
-    <class>org.turing.entity.Measure</class>
-    <class>org.turing.entity.MeasureTest</class>
-    <class>org.turing.entity.Recipe</class>
+    <class>org.turing.app.entity.Auditorium</class>
+    <class>org.turing.app.entity.Booking</class>
+    <class>org.turing.app.entity.Employee</class>
+    <class>org.turing.app.entity.GroupTicket</class>
+    <class>org.turing.app.entity.Marathon</class>
+    <class>org.turing.app.entity.Movie</class>
+    <class>org.turing.app.entity.Seat</class>
+    <class>org.turing.app.entity.Showing</class>
+    <class>org.turing.app.entity.Ticket</class>
+    <class>org.turing.app.entity.Patient</class>
+    <class>org.turing.app.entity.Doctor</class>
+    <class>org.turing.app.entity.Appointment</class>
+    <class>org.turing.app.entity.Leave</class>
+    <class>org.turing.app.entity.Medicine</class>
+    <class>org.turing.app.entity.Nurse</class>
+    <class>org.turing.app.entity.Treatment</class>
+    <class>org.turing.app.entity.User</class>
+    <class>org.turing.app.entity.Test</class>
+    <class>org.turing.app.entity.Measure</class>
+    <class>org.turing.app.entity.MeasureTest</class>
+    <class>org.turing.app.entity.Recipe</class>
     
     <properties>
       <property name="openjpa.ConnectionURL" value="jdbc:hsqldb:db/szpl_database"/>

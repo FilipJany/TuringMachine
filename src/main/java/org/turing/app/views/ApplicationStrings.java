@@ -1,4 +1,4 @@
-package org.turing.views;
+package org.turing.app.views;
 
 public interface ApplicationStrings {
     String MAIN_WINDOW_TITLE = "Turing Machine - main window";

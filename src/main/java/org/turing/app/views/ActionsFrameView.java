@@ -1,9 +1,9 @@
-package org.turing.views;
+package org.turing.app.views;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.turing.controllers.ActionsEditController;
-import org.turing.controllers.ImportController;
+import org.turing.app.controllers.ActionsEditController;
+import org.turing.app.controllers.ImportController;
 
 import javax.swing.*;
 

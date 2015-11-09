@@ -1,10 +1,10 @@
-package org.turing.views;
+package org.turing.app.views;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.turing.controllers.ExecutionController;
-import org.turing.controllers.ImportController;
-import org.turing.controllers.TapeEditController;
+import org.turing.app.controllers.ExecutionController;
+import org.turing.app.controllers.ImportController;
+import org.turing.app.controllers.TapeEditController;
 
 import javax.swing.*;
 

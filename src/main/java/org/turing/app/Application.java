@@ -1,7 +1,7 @@
-package org.turing;
+package org.turing.app;
 
-import org.turing.views.ActionsFrameView;
-import org.turing.views.MainFrameView;
+import org.turing.app.views.ActionsFrameView;
+import org.turing.app.views.MainFrameView;
 
 public class Application {
 

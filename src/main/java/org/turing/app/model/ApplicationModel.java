@@ -1,4 +1,4 @@
-package org.turing.model;
+package org.turing.app.model;
 
 public class ApplicationModel {
 }
