@@ -78,9 +78,14 @@ public class ResourceProvider {
     };
 
     //STATIC FIELDS: Application support files
-    static public final String FILE_SETTINGS = "/properties/Settings.properties";
+
     static public final String DIR_PROPERTIES = "/properties/";
+    static public final String FILE_SETTINGS = DIR_PROPERTIES + "Settings.properties";
+    static public final String FILE_GUI_SETTINGS = DIR_PROPERTIES + "GuiSettings.properties";
+
     static public final String DIR_LOGS = "/log/";
+    static public final String FILE_LOG = DIR_LOGS + "TuringMachine.log";
+
     static public final String DIR_LICENCE = "/licence/";
 
     //STATIC FIELDS: Images
@@ -351,10 +356,10 @@ public class ResourceProvider {
             settings.load(propertiesStream);
         } catch (Exception ex) {
             Logger.warning("Cannot read user's \"Settings\" file. Loaded default settings.");
-            throw new MissingResourceException(
-                    "Cannot read user's \"Settings\" file. Loaded default settings.",
-                    ResourceProvider.class.getName(),
-                    getSupportFile(FILE_SETTINGS).getPath());
+//            throw new MissingResourceException(
+//                    "Cannot read user's \"Settings\" file. Loaded default settings.",
+//                    ResourceProvider.class.getName(),
+//                    getSupportFile(FILE_SETTINGS).getPath());
         }
     }
 
@@ -491,10 +496,10 @@ public class ResourceProvider {
             properties.load(propertiesStream);
         } catch (Exception ex) {
             Logger.warning("Properties file " + propertiesFile.getName() + " could not been loaded. Loaded default properties instead.");
-            throw new MissingResourceException(
-                    "Properties file " + propertiesFile.getName() + " could not been loaded. Loaded default properties instead.",
-                    ResourceProvider.class.getName(),
-                    propertiesFile.getPath());
+//            throw new MissingResourceException(
+//                    "Properties file " + propertiesFile.getName() + " could not been loaded. Loaded default properties instead.",
+//                    ResourceProvider.class.getName(),
+//                    propertiesFile.getPath());
         }
 
         return properties;
@@ -561,6 +566,14 @@ public class ResourceProvider {
         }
     }
 
+    public static File getApplicationSupportDirectory() {
+        if (platform != null) {
+            return platform.getSupportDataDirectory();
+        }
+
+        return null;
+    }
+
     private static OS.PlatformFamily detectPlatform(String platform) {
         platform = platform.toLowerCase();
 
@@ -581,23 +594,23 @@ public class ResourceProvider {
         /**
          * Images location relative to provider.
          */
-        static final String IMAGES_PATH = "/resources/images/";
+        static final String IMAGES_PATH = "/org/turing/resources/images/";
         /**
          * Icons location relative to provider.
          */
-        static final String ICONS_PATH = "/resources/icons/";
+        static final String ICONS_PATH = "/org/turing/resources/icons/";
         /**
          * Sound location relative to provider
          */
-        static final String AUDIO_PATH = "/resources/audio/";
+        static final String AUDIO_PATH = "/org/turing/resources/audio/";
         /**
          * DefaultSettings location relative to provider
          */
-        static final String DEFAULT_SETTINGS_PATH = "/resources/data/DefaultSettings.properties";
+        static final String DEFAULT_SETTINGS_PATH = "/org/turing/resources/data/DefaultSettings.properties";
         /**
          * Dictionary location
          */
-        static final String DICTIONARY_PATH = "resources.locales.dictionary";
+        static final String DICTIONARY_PATH = "org.turing.resources.locales.Dictionary";
         /**
          * Special character in localized string that is changed for provided
          * following arguments.

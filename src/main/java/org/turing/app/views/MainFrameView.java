@@ -1,16 +1,14 @@
 package org.turing.app.views;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.turing.app.controllers.ExecutionController;
 import org.turing.app.controllers.ImportController;
 import org.turing.app.controllers.TapeEditController;
+import org.turing.support.Logger;
 
 import javax.swing.*;
 
 public class MainFrameView {
 
-    private static final Logger logger = LoggerFactory.getLogger(MainFrameView.class);
 
     private final ExecutionController executionController;
     private final TapeEditController tapeEditController;
@@ -28,7 +26,7 @@ public class MainFrameView {
         frame = new JFrame(ApplicationStrings.MAIN_WINDOW_TITLE);
 
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        logger.info("Actions frame fully initialized");
+        Logger.log("Actions frame initialized.");
     }
 
     public void show() {

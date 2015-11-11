@@ -1,20 +1,54 @@
 package org.turing.app;
 
-import org.turing.app.views.ActionsFrameView;
 import org.turing.app.views.MainFrameView;
+import org.turing.app.views.ProgramFrameView;
+import org.turing.support.Constants;
+import org.turing.support.Logger;
+import org.turing.support.ResourceProvider;
+
+import java.io.IOException;
 
 public class Application {
 
     private final MainFrameView mainFrameView;
-    private final ActionsFrameView actionsFrameView;
+    private final ProgramFrameView programFrameView;
 
-    public Application(MainFrameView mainFrameView, ActionsFrameView actionsFrameView) {
+    public Application(MainFrameView mainFrameView, ProgramFrameView programFrameView) {
         this.mainFrameView = mainFrameView;
-        this.actionsFrameView = actionsFrameView;
+        this.programFrameView = programFrameView;
     }
 
     public void show() {
         mainFrameView.show();
-        actionsFrameView.show();
+        programFrameView.show();
+    }
+
+    public void loadApplicationData() throws IOException {
+        ResourceProvider.loadPlatform(System.getProperty("os.name"));
+
+//        try {
+//            Logger.setOutput(ResourceProvider.getSupportFile(ResourceProvider.FILE_LOG).getAbsolutePath());
+//        } catch (FileNotFoundException e) {
+//            Logger.error(e);
+//            System.exit(1);
+//        }
+        Logger.log("Application started.");
+        Logger.log("Logger has been set up.");
+
+        try {
+            ResourceProvider.loadSettings();
+        } catch (IOException e) {
+            Logger.error(e);
+            System.exit(1);
+        }
+        Logger.log("Loaded settings.");
+
+        ResourceProvider.loadProperties(
+                ResourceProvider.getSupportFile(ResourceProvider.FILE_GUI_SETTINGS),
+                Constants.DEFAULT_GUI_SETTINGS);
+        Logger.log("Loaded Gui Settings.");
+
+        ResourceProvider.loadLocale(ResourceProvider.getSetting("locale"));
+        Logger.log("Loaded localised dictionary for: " + ResourceProvider.getSetting("locale") + ".");
     }
 }

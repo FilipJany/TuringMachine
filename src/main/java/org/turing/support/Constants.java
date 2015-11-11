@@ -15,8 +15,7 @@ public class Constants {
     public static final String APPLICATION_REAL = "UTM";
 
     //DEFAULT DATA FILES
+    public static final String DEFAULT_GUI_SETTINGS = "/org/turing/resources/data/DefaultGuiSettings.properties";
 
     //TEMPORARY DIRECTORIES
-    public static final String CLANG_ANALYSIS_TEMP_DIR = "cardio_clang_analysis";
-    public static final String CLANG_ANALYSIS_ERR_OUT = "err.log";
 }

@@ -2,10 +2,10 @@ package org.turing.app.controllers;
 
 import org.turing.app.model.ApplicationModel;
 
-public class ActionsEditController {
+public class ProgramEditController {
     private final ApplicationModel applicationModel;
 
-    public ActionsEditController(ApplicationModel applicationModel) {
+    public ProgramEditController(ApplicationModel applicationModel) {
         this.applicationModel = applicationModel;
     }
 }
