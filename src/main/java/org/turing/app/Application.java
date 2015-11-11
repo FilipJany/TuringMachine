@@ -7,8 +7,11 @@ import org.turing.support.Logger;
 import org.turing.support.ResourceProvider;
 
 import java.io.IOException;
+import java.util.Properties;
 
 public class Application {
+
+    private Properties guiSettings;
 
     private final MainFrameView mainFrameView;
     private final ProgramFrameView programFrameView;
@@ -37,18 +40,26 @@ public class Application {
 
         try {
             ResourceProvider.loadSettings();
+            ResourceProvider.saveSettings();
         } catch (IOException e) {
             Logger.error(e);
             System.exit(1);
         }
         Logger.log("Loaded settings.");
 
-        ResourceProvider.loadProperties(
+        guiSettings = ResourceProvider.loadProperties(
                 ResourceProvider.getSupportFile(ResourceProvider.FILE_GUI_SETTINGS),
                 Constants.DEFAULT_GUI_SETTINGS);
+        ResourceProvider.saveProperties(
+                guiSettings,
+                ResourceProvider.getSupportFile(ResourceProvider.FILE_GUI_SETTINGS));
         Logger.log("Loaded Gui Settings.");
 
         ResourceProvider.loadLocale(ResourceProvider.getSetting("locale"));
         Logger.log("Loaded localised dictionary for: " + ResourceProvider.getSetting("locale") + ".");
+    }
+
+    public Properties getGuiSettings() {
+        return guiSettings;
     }
 }
