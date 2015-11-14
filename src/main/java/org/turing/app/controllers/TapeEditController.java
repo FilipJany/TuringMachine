@@ -1,11 +1,11 @@
 package org.turing.app.controllers;
 
-import org.turing.app.model.ApplicationModel;
+import org.turing.app.model.DataModel;
 
 public class TapeEditController {
-    private final ApplicationModel applicationModel;
+    private final DataModel dataModel;
 
-    public TapeEditController(ApplicationModel applicationModel) {
-        this.applicationModel = applicationModel;
+    public TapeEditController(DataModel dataModel) {
+        this.dataModel = dataModel;
     }
 }

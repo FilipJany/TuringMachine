@@ -1,11 +1,11 @@
 package org.turing.app.controllers;
 
-import org.turing.app.model.ApplicationModel;
+import org.turing.app.model.DataModel;
 
 public class ExecutionController {
-    private final ApplicationModel applicationModel;
+    private final DataModel dataModel;
 
-    public ExecutionController(ApplicationModel applicationModel) {
-        this.applicationModel = applicationModel;
+    public ExecutionController(DataModel dataModel) {
+        this.dataModel = dataModel;
     }
 }

@@ -1,4 +1,6 @@
 package org.turing.app.model;
 
-public class ApplicationModel {
+public class ProgramModel {
+
+
 }
