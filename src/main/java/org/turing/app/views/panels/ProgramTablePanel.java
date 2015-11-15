@@ -1,6 +1,5 @@
 package org.turing.app.views.panels;
 
-import com.sun.tools.internal.ws.wscompile.Options;
 import org.turing.app.views.ApplicationConstraints;
 
 import javax.swing.*;
