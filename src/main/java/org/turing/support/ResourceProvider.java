@@ -594,23 +594,23 @@ public class ResourceProvider {
         /**
          * Images location relative to provider.
          */
-        static final String IMAGES_PATH = "/org/turing/resources/images/";
+        static final String IMAGES_PATH = "images/";
         /**
          * Icons location relative to provider.
          */
-        static final String ICONS_PATH = "/org/turing/resources/icons/";
+        static final String ICONS_PATH = "icons/";
         /**
          * Sound location relative to provider
          */
-        static final String AUDIO_PATH = "/org/turing/resources/audio/";
+        static final String AUDIO_PATH = "audio/";
         /**
          * DefaultSettings location relative to provider
          */
-        static final String DEFAULT_SETTINGS_PATH = "/org/turing/resources/data/DefaultSettings.properties";
+        static final String DEFAULT_SETTINGS_PATH = "/data/DefaultSettings.properties";
         /**
          * Dictionary location
          */
-        static final String DICTIONARY_PATH = "org.turing.resources.locales.Dictionary";
+        static final String DICTIONARY_PATH = "locales.Dictionary";
         /**
          * Special character in localized string that is changed for provided
          * following arguments.

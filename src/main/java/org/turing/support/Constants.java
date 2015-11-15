@@ -15,7 +15,7 @@ public class Constants {
     public static final String APPLICATION_REAL = "UTM";
 
     //DEFAULT DATA FILES
-    public static final String DEFAULT_GUI_SETTINGS = "/org/turing/resources/data/DefaultGuiSettings.properties";
+    public static final String DEFAULT_GUI_SETTINGS = "/data/DefaultGuiSettings.properties";
 
     //TEMPORARY DIRECTORIES
 }
