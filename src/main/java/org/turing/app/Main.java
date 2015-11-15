@@ -6,8 +6,8 @@ import org.turing.app.controllers.ProgramEditController;
 import org.turing.app.controllers.TapeEditController;
 import org.turing.app.model.DataModel;
 import org.turing.app.model.ProgramModel;
-import org.turing.app.views.MainFrameView;
 import org.turing.app.views.ProgramFrameView;
+import org.turing.app.views.MainFrameView;
 import org.turing.support.Logger;
 
 import java.io.IOException;
@@ -23,8 +23,8 @@ public class Main {
 		final TapeEditController tapeEditController = new TapeEditController(dataModel);
 		final ImportController importController = new ImportController(dataModel, programModel);
 
-		final MainFrameView mainFrameView = new MainFrameView(executionController, tapeEditController, importController);
-        final ProgramFrameView programFrameView = new ProgramFrameView(programEditController, importController);
+		final ProgramFrameView mainFrameView = new ProgramFrameView(executionController, tapeEditController, importController);
+        final MainFrameView programFrameView = new MainFrameView(programEditController, importController);
 
 		mainFrameView.init();
         programFrameView.init();

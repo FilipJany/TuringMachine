@@ -1,7 +1,7 @@
 package org.turing.app;
 
-import org.turing.app.views.MainFrameView;
 import org.turing.app.views.ProgramFrameView;
+import org.turing.app.views.MainFrameView;
 import org.turing.support.Constants;
 import org.turing.support.Logger;
 import org.turing.support.ResourceProvider;
@@ -13,10 +13,10 @@ public class Application {
 
     private Properties guiSettings;
 
-    private final MainFrameView mainFrameView;
     private final ProgramFrameView programFrameView;
+    private final MainFrameView mainFrameView;
 
-    public Application(MainFrameView mainFrameView, ProgramFrameView programFrameView) {
+    public Application(ProgramFrameView programFrameView, MainFrameView mainFrameView) {
         this.mainFrameView = mainFrameView;
         this.programFrameView = programFrameView;
     }

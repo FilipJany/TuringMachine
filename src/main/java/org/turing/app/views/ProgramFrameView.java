@@ -1,11 +1,9 @@
 package org.turing.app.views;
 
+import org.turing.app.controllers.ExecutionController;
 import org.turing.app.controllers.ImportController;
-import org.turing.app.controllers.ProgramEditController;
-import org.turing.app.views.panels.ControlPanel;
-import org.turing.app.views.panels.SliderPanel;
-import org.turing.app.views.panels.StatePanel;
-import org.turing.app.views.panels.TapePanel;
+import org.turing.app.controllers.TapeEditController;
+import org.turing.app.views.panels.ProgramTablePanel;
 import org.turing.support.Logger;
 
 import javax.swing.*;
@@ -15,25 +13,25 @@ import static javax.swing.SpringLayout.*;
 
 public class ProgramFrameView {
 
-    private final ProgramEditController programEditController;
+
+    private final ExecutionController executionController;
+    private final TapeEditController tapeEditController;
     private final ImportController importController;
 
-    private ControlPanel controlPanel;
-    private SliderPanel sliderPanel;
-    private StatePanel statePanel;
-    private TapePanel tapePanel;
+    private ProgramTablePanel tablePanel;
     private MenuBar menuBar;
 
     private JFrame frame;
     private SpringLayout layout;
 
-    public ProgramFrameView(ProgramEditController programEditController, ImportController importController) {
-        this.programEditController = programEditController;
+    public ProgramFrameView(ExecutionController executionController, TapeEditController tapeEditController, ImportController importController) {
+        this.executionController = executionController;
+        this.tapeEditController = tapeEditController;
         this.importController = importController;
     }
 
     public void init() {
-        frame = new JFrame(ApplicationStrings.ACTIONS_WINDOW_TITLE);
+        frame = new JFrame(ApplicationStrings.MAIN_WINDOW_TITLE);
 
         createFrameComponents();
         setFrameSettings();
@@ -45,22 +43,11 @@ public class ProgramFrameView {
         frame.setVisible(true);
     }
 
-    private void setFrameSettings()
-    {
-        frame.setSize(ApplicationConstraints.actionsFrameMinimalWidth, ApplicationConstraints.actionsFrameMinimalHeight);
-        frame.setMinimumSize(new Dimension(ApplicationConstraints.actionsFrameMinimalWidth, ApplicationConstraints.actionsFrameMinimalHeight));
-        frame.setLayout(layout);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    }
-
     private void createFrameComponents()
     {
         layout = new SpringLayout();
 
-        createAndInitControlPanel();
-        createAndInitScrollPane();
-        createAndInitStatusPanel();
-        createAndInitTapePanel();
+        createAndInitTablePanel();
         createAndInitMenuBar();
     }
 
@@ -77,62 +64,24 @@ public class ProgramFrameView {
         }
     }
 
-    private void createAndInitControlPanel()
+    private void setFrameSettings()
     {
-        try
-        {
-            controlPanel = new ControlPanel();
-            controlPanel.setPreferredSize(new Dimension(ApplicationConstraints.minimalControlPanelWidth, ApplicationConstraints.minimalControlPanelHeight));
-
-            frame.add(controlPanel);
-
-            layout.putConstraint(EAST, controlPanel, -10, EAST, frame.getContentPane());
-            layout.putConstraint(NORTH, controlPanel, 10, NORTH, frame.getContentPane());
-        }
-        catch (Exception e)
-        {
-            e.getMessage();
-        }
+        frame.setLocation(ApplicationConstraints.programFrameStartLocationX, ApplicationConstraints.programFrameStartLocationY);
+        frame.setSize(ApplicationConstraints.programFrameMinimalWidth, ApplicationConstraints.programFrameMinimalHeight);
+        frame.setMinimumSize(new Dimension(ApplicationConstraints.programFrameMinimalWidth, ApplicationConstraints.programFrameMinimalHeight));
+        frame.setLayout(layout);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
-    private void createAndInitScrollPane()
+    private void createAndInitTablePanel()
     {
-        try
-        {
-            sliderPanel = new SliderPanel();
-            sliderPanel.setPreferredSize(new Dimension(ApplicationConstraints.sliderPanelMinimalWidth, ApplicationConstraints.sliderPanelMinimalHeight));
+        tablePanel = new ProgramTablePanel();
 
-            frame.add(sliderPanel);
+        frame.add(tablePanel);
 
-            layout.putConstraint(SOUTH, sliderPanel, -10, SOUTH, frame.getContentPane());
-            layout.putConstraint(WEST, sliderPanel, 10, WEST, frame.getContentPane());
-            layout.putConstraint(EAST, sliderPanel, -10, EAST, frame.getContentPane());
-        }
-        catch(Exception e)
-        {
-            e.getMessage();
-        }
-    }
-
-    private void createAndInitStatusPanel()
-    {
-        statePanel = new StatePanel();
-
-        frame.add(statePanel);
-
-        layout.putConstraint(NORTH, statePanel, 10, NORTH, frame.getContentPane());
-        layout.putConstraint(WEST, statePanel, 10, WEST, frame.getContentPane());
-    }
-
-    private void createAndInitTapePanel()
-    {
-        tapePanel = new TapePanel();
-
-        frame.add(tapePanel);
-
-        layout.putConstraint(NORTH, tapePanel, 10, SOUTH, controlPanel);
-        layout.putConstraint(SOUTH, tapePanel, 10, NORTH, sliderPanel);
-        layout.putConstraint(WEST, tapePanel, 10, WEST, frame.getContentPane());
-        layout.putConstraint(EAST, tapePanel, -10, EAST, frame.getContentPane());
+        layout.putConstraint(NORTH, tablePanel, 10, NORTH, frame.getContentPane());
+        layout.putConstraint(EAST, tablePanel, -10, EAST, frame.getContentPane());
+        layout.putConstraint(SOUTH, tablePanel, -10, SOUTH, frame.getContentPane());
+        layout.putConstraint(WEST, tablePanel, 10, WEST, frame.getContentPane());
     }
 }
