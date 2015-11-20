@@ -5,6 +5,9 @@ import com.google.common.base.Objects;
 import static com.google.common.base.MoreObjects.toStringHelper;
 import static com.google.common.base.Preconditions.checkNotNull;
 
+/**
+ * I wish this will stay immutable... ;)
+ */
 public class Symbol {
 
     private final String value;

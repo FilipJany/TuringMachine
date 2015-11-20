@@ -38,7 +38,7 @@ public class MainFrameView {
         createFrameComponents();
         setFrameSettings();
 
-        Logger.log("Actions frame initialized.");
+        Logger.log("Data frame initialized.");
     }
 
     public void show() {
@@ -51,7 +51,7 @@ public class MainFrameView {
         frame.setSize(ApplicationConstraints.mainFrameMinimalWidth, ApplicationConstraints.mainFrameMinimalHeight);
         frame.setMinimumSize(new Dimension(ApplicationConstraints.mainFrameMinimalWidth, ApplicationConstraints.mainFrameMinimalHeight));
         frame.setLayout(layout);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     }
 
     private void createFrameComponents()

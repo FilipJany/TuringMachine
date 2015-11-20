@@ -1,6 +1,6 @@
 package org.turing.app.common;
 
-public class HaltState extends State {
+public final class HaltState extends State {
 
     public static final HaltState HALT = new HaltState();
 

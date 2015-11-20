@@ -1,6 +1,6 @@
 package org.turing.app.common;
 
-public class BlankSymbol extends Symbol {
+public final class BlankSymbol extends Symbol {
 
     public static final BlankSymbol BLANK = new BlankSymbol();
 

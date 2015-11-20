@@ -36,7 +36,7 @@ public class ProgramFrameView {
         createFrameComponents();
         setFrameSettings();
 
-        Logger.log("Actions frame initialized.");
+        Logger.log("Program frame initialized.");
     }
 
     public void show() {
@@ -70,7 +70,7 @@ public class ProgramFrameView {
         frame.setSize(ApplicationConstraints.programFrameMinimalWidth, ApplicationConstraints.programFrameMinimalHeight);
         frame.setMinimumSize(new Dimension(ApplicationConstraints.programFrameMinimalWidth, ApplicationConstraints.programFrameMinimalHeight));
         frame.setLayout(layout);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     }
 
     private void createAndInitTablePanel()

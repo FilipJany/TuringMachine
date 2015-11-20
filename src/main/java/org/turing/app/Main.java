@@ -23,7 +23,7 @@ public class Main {
 		final TapeEditController tapeEditController = new TapeEditController(dataModel);
 		final ImportController importController = new ImportController(dataModel, programModel);
 
-		final ProgramFrameView mainFrameView = new ProgramFrameView(executionController, tapeEditController, importController);
+        final ProgramFrameView mainFrameView = new ProgramFrameView(executionController, tapeEditController, importController);
         final MainFrameView programFrameView = new MainFrameView(programEditController, importController);
 
 		mainFrameView.init();
