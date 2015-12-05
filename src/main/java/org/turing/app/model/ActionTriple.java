@@ -1,13 +1,16 @@
 package org.turing.app.model;
 
 import com.google.common.base.Objects;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONAware;
 import org.turing.app.common.MoveDirection;
 import org.turing.app.common.State;
 import org.turing.app.common.Symbol;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
+import static com.google.common.collect.ImmutableList.of;
 
-public class ActionTriple {
+public class ActionTriple implements JSONAware {
 
     private final State state;
     private final Symbol symbol;
@@ -53,5 +56,10 @@ public class ActionTriple {
                 .add("symbol", symbol)
                 .add("moveDirection", moveDirection)
                 .toString();
+    }
+
+    @Override
+    public String toJSONString() {
+        return JSONArray.toJSONString(of(state, symbol, moveDirection));
     }
 }

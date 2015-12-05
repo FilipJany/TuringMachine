@@ -1,6 +1,7 @@
 package org.turing.app.common;
 
 import com.google.common.base.Objects;
+import org.json.simple.JSONAware;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -8,7 +9,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 /**
  * I wish this will stay immutable... ;)
  */
-public class Symbol {
+public class Symbol implements JSONAware {
 
     private final String value;
 
@@ -34,5 +35,17 @@ public class Symbol {
         return toStringHelper(this)
                 .add("value", value)
                 .toString();
+    }
+
+    @Override
+    public String toJSONString() {
+        return "\"" + value + "\"";
+    }
+
+    public static Symbol fromJsonString(String jsonString) {
+        if(((Symbol)BlankSymbol.BLANK).value.equals(jsonString)) {
+            return BlankSymbol.BLANK;
+        }
+        return new Symbol(jsonString);
     }
 }

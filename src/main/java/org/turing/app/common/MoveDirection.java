@@ -1,6 +1,8 @@
 package org.turing.app.common;
 
-public enum MoveDirection {
+import org.json.simple.JSONAware;
+
+public enum MoveDirection implements JSONAware {
     LEFT("←"), RIGHT("→"), NONE("•");
 
     private final String symbol;
@@ -12,5 +14,10 @@ public enum MoveDirection {
     @Override
     public String toString() {
         return symbol;
+    }
+
+    @Override
+    public String toJSONString() {
+        return "\"" + super.toString() + "\"";
     }
 }
