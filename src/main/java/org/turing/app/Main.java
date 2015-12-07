@@ -10,24 +10,22 @@ import org.turing.app.views.ProgramFrameView;
 import org.turing.app.views.MainFrameView;
 import org.turing.support.Logger;
 
+import javax.swing.*;
 import java.io.IOException;
 
 public class Main {
 
-	private static Application createApplication() {
-		final DataModel dataModel = new DataModel();
+    private static Application createApplication() {
+        final DataModel dataModel = new DataModel();
         final ProgramModel programModel = new ProgramModel();
 
         final ProgramEditController programEditController = new ProgramEditController(programModel);
         final ExecutionController executionController = new ExecutionController(dataModel);
-		final TapeEditController tapeEditController = new TapeEditController(dataModel);
-		final ImportController importController = new ImportController(dataModel, programModel);
+        final TapeEditController tapeEditController = new TapeEditController(dataModel);
+        final ImportController importController = new ImportController(dataModel, programModel);
 
         final ProgramFrameView mainFrameView = new ProgramFrameView(executionController, tapeEditController, importController);
         final MainFrameView programFrameView = new MainFrameView(programEditController, importController);
-
-		mainFrameView.init();
-        programFrameView.init();
 
         Application application = new Application(mainFrameView, programFrameView);
 
@@ -40,10 +38,10 @@ public class Main {
 
         return application;
     }
-	
-	public static void main(String[] args) {
-		final Application application = createApplication();
-		application.show();
-	}
+
+    public static void main(String[] args) {
+        final Application application = createApplication();
+        SwingUtilities.invokeLater(application::initAndShow);
+    }
 
 }

@@ -21,7 +21,10 @@ public class Application {
         this.programFrameView = programFrameView;
     }
 
-    public void show() {
+    public void initAndShow() {
+        mainFrameView.init();
+        programFrameView.init();
+
         mainFrameView.show();
         programFrameView.show();
     }
