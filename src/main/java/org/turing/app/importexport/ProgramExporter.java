@@ -37,7 +37,7 @@ public class ProgramExporter {
         return symbols;
     }
 
-    public JSONObject getTransitions() {
+    private JSONObject getTransitions() {
         Map<JSONAware, Object> transitions = Maps.newHashMap();
         Table<State, Symbol, ActionTriple> transitionTable = programModel.getTransitionTable();
         for (State state : transitionTable.rowKeySet()) {

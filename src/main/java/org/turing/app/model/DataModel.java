@@ -78,4 +78,11 @@ public class DataModel {
         this.state = state;
     }
 
+    public InfiniteSymbolStack getLeftTape() {
+        return leftTape;
+    }
+
+    public InfiniteSymbolStack getRightTape() {
+        return rightTape;
+    }
 }

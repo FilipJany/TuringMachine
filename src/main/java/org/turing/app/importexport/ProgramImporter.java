@@ -5,9 +5,11 @@ import org.json.simple.JSONObject;
 import org.turing.app.common.MoveDirection;
 import org.turing.app.common.State;
 import org.turing.app.common.Symbol;
-import org.turing.app.exceptions.ImportException;
+import org.turing.app.exceptions.ImportExportException;
 import org.turing.app.model.ActionTriple;
 import org.turing.app.model.ProgramModel;
+
+import static org.turing.app.importexport.ImportExportUtils.*;
 
 public class ProgramImporter {
 
@@ -38,7 +40,7 @@ public class ProgramImporter {
 
     private ActionTriple getActionTripleFromJsonArray(JSONArray jsonArray) {
         if(jsonArray.size() != 3) {
-            throw new ImportException("action triple should be a triple. Makes sense, right?");
+            throw new ImportExportException("action triple should be a triple. Makes sense, right?");
         }
         State state = State.fromJsonString(getAsString(jsonArray.get(0)));
         Symbol symbol = Symbol.fromJsonString(getAsString(jsonArray.get(1)));
@@ -54,11 +56,6 @@ public class ProgramImporter {
         }
     }
 
-    private State getStateFromObject(Object stateAsObject) {
-        String stateAsString = getAsString(stateAsObject);
-        return State.fromJsonString(stateAsString);
-    }
-
     private void readSymbols(JSONObject programData) {
         JSONArray symbols = get(programData, ImportExportConstants.SYMBOLS_PARAM, JSONArray.class);
         for (Object symbolAsObject : symbols) {
@@ -67,23 +64,4 @@ public class ProgramImporter {
         }
     }
 
-    private Symbol getSymbolFromObject(Object symbolAsObject) {
-        String symbolAsString = getAsString(symbolAsObject);
-        return Symbol.fromJsonString(symbolAsString);
-    }
-
-    private String getAsString(Object object) {
-        if(!(object instanceof String)) {
-            throw new ImportException("expected a string, got " + object);
-        }
-        return (String) object;
-    }
-
-    private <T> T get(JSONObject jsonObject, Object key, Class<T> clazz) {
-        Object result = jsonObject.get(key);
-        if (!(clazz.isInstance(result))) {
-            throw new ImportException(clazz.getName() + " expected for key " + key);
-        }
-        return (T) result;
-    }
 }
