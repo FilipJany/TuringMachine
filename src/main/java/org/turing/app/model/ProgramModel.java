@@ -4,6 +4,7 @@ import com.google.common.collect.*;
 import org.turing.app.common.MoveDirection;
 import org.turing.app.common.State;
 import org.turing.app.common.Symbol;
+import org.turing.support.Logger;
 
 import java.util.Set;
 
@@ -45,6 +46,22 @@ public class ProgramModel {
         transitionTable.put(state, symbol, actionTriple);
     }
 
+    public State getState(int index) {
+        Logger.warning("Jacku, implement this method please."); //TODO
+        //Discuss
+        return null;
+    }
+
+    public Symbol getSymbol(int index) {
+        Logger.warning("Jacku, implement this method please."); //TODO
+        //Discuss
+        return null;
+    }
+
+    public ActionTriple getActionTriple(State state, Symbol symbol) {
+        return transitionTable.get(state, symbol);
+    }
+
     public void deleteState(State state) {
         if (state.equals(HALT)) {
             throw new RuntimeException("Nope. Cannot remove HALT state");
@@ -65,6 +82,21 @@ public class ProgramModel {
 
     public void deleteTransition(State state, Symbol symbol) {
         transitionTable.remove(state, symbol);
+    }
+
+    public void renameSymbol() {
+        Logger.warning("Jacku, implement this method please."); //TODO
+        // I have little knowledge about Google collections
+        // but I see the table is somehow hash-based,
+        // by changing symbol name we change hash of the object.
+        // I could create new column, copy current one and delete
+        // column of old symbol name.
+        // - but maybe u know simpler / better methood...
+    }
+
+    public void renameState() {
+        Logger.warning("Jacku, implement this method please."); //TODO
+        //see above
     }
 
     public void clear() {
