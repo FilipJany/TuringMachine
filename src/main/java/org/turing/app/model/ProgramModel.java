@@ -46,13 +46,13 @@ public class ProgramModel {
         transitionTable.put(state, symbol, actionTriple);
     }
 
-    public State getState(int index) {
+    public State getStateAt(int index) {
         Logger.warning("Jacku, implement this method please."); //TODO
         //Discuss
         return null;
     }
 
-    public Symbol getSymbol(int index) {
+    public Symbol getSymbolAt(int index) {
         Logger.warning("Jacku, implement this method please."); //TODO
         //Discuss
         return null;
