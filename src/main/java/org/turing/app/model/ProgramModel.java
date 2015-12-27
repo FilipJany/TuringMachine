@@ -58,10 +58,6 @@ public class ProgramModel {
         return null;
     }
 
-    public ActionTriple getActionTriple(State state, Symbol symbol) {
-        return transitionTable.get(state, symbol);
-    }
-
     public void deleteState(State state) {
         if (state.equals(HALT)) {
             throw new RuntimeException("Nope. Cannot remove HALT state");
