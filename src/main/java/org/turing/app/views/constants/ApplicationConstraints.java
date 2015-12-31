@@ -1,4 +1,4 @@
-package org.turing.app.views;
+package org.turing.app.views.constants;
 
 /**
  * Created by fifi on 15.11.2015.
@@ -23,4 +23,5 @@ public  class ApplicationConstraints
     //TablePanel
     public final static int tablePanelButtonHeight = 15, tablePanelButtonWidth = 15;
     public final static int tableMinimalHeight = 300, tableMinimalWidth = 500;
+    public final static int columnWidth = 80, selectedColumnWidth = 250;
 }

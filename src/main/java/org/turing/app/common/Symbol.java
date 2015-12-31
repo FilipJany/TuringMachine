@@ -2,6 +2,7 @@ package org.turing.app.common;
 
 import com.google.common.base.Objects;
 import org.json.simple.JSONAware;
+import org.turing.app.exceptions.SymbolException;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -13,8 +14,18 @@ public class Symbol implements JSONAware {
 
     private final String value;
 
-    public Symbol(String value) {
+    public Symbol(String value) throws SymbolException {
+        if (!isValid(value))
+            throw new SymbolException("Symbol value not allowed.");
         this.value = checkNotNull(value);
+    }
+
+    private boolean isValid(String value) {
+        return value != null && value.length() <= 1 && !value.equals("\t") && !value.equals("\n");
+    }
+
+    public String getValue() {
+        return value;
     }
 
     @Override
@@ -42,7 +53,7 @@ public class Symbol implements JSONAware {
         return "\"" + value + "\"";
     }
 
-    public static Symbol fromJsonString(String jsonString) {
+    public static Symbol fromJsonString(String jsonString) throws SymbolException {
         if(((Symbol)BlankSymbol.BLANK).value.equals(jsonString)) {
             return BlankSymbol.BLANK;
         }

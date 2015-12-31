@@ -1,13 +1,12 @@
 package org.turing.app.views.panels;
 
-import org.turing.app.views.ApplicationConstraints;
+import org.turing.app.views.constants.ApplicationConstraints;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.*;
+import java.util.LinkedList;
 
 import static javax.swing.SpringLayout.*;
-import static javax.swing.SpringLayout.WEST;
 
 /**
  * Created by FiFi on 2015-11-11.

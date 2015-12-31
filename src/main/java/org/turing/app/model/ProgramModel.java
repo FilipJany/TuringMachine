@@ -47,15 +47,15 @@ public class ProgramModel {
     }
 
     public State getStateAt(int index) {
-        Logger.warning("Jacku, implement this method please."); //TODO
-        //Discuss
-        return null;
+        Logger.warning("Jacku, implement this method please.");
+        //TODO: legalStates should be ordered itself - it's just temporary, excessive implementation
+        return Lists.newArrayList(legalStates).get(index);
     }
 
     public Symbol getSymbolAt(int index) {
-        Logger.warning("Jacku, implement this method please."); //TODO
-        //Discuss
-        return null;
+        Logger.warning("Jacku, implement this method please.");
+        //TODO: legalSymbols should be ordered itself - it's just temporary, excessive implementation
+        return Lists.newArrayList(legalSymbols).get(index);
     }
 
     public void deleteState(State state) {
@@ -81,18 +81,13 @@ public class ProgramModel {
     }
 
     public void renameSymbol() {
-        Logger.warning("Jacku, implement this method please."); //TODO
-        // I have little knowledge about Google collections
-        // but I see the table is somehow hash-based,
-        // by changing symbol name we change hash of the object.
-        // I could create new column, copy current one and delete
-        // column of old symbol name.
-        // - but maybe u know simpler / better methood...
+        Logger.warning("Jacku, implement this method please.");
+        // TODO: Discuss
     }
 
     public void renameState() {
-        Logger.warning("Jacku, implement this method please."); //TODO
-        //see above
+        Logger.warning("Jacku, implement this method please.");
+        //TODO: Discuss
     }
 
     public void clear() {

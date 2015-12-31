@@ -12,4 +12,8 @@ public final class BlankSymbol extends Symbol {
     public String toString() {
         return "BlankSymbol";
     }
+
+    public String visibleRep() {
+        return "❏";
+    }
 }

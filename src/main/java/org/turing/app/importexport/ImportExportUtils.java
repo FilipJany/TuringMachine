@@ -4,6 +4,7 @@ import org.json.simple.JSONObject;
 import org.turing.app.common.State;
 import org.turing.app.common.Symbol;
 import org.turing.app.exceptions.ImportExportException;
+import org.turing.app.exceptions.SymbolException;
 
 public class ImportExportUtils {
 
@@ -12,7 +13,7 @@ public class ImportExportUtils {
         return State.fromJsonString(stateAsString);
     }
 
-    public static Symbol getSymbolFromObject(Object symbolAsObject) {
+    public static Symbol getSymbolFromObject(Object symbolAsObject) throws SymbolException {
         String symbolAsString = getAsString(symbolAsObject);
         return Symbol.fromJsonString(symbolAsString);
     }

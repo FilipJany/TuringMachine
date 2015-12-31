@@ -6,6 +6,7 @@ import org.turing.app.common.MoveDirection;
 import org.turing.app.common.State;
 import org.turing.app.common.Symbol;
 import org.turing.app.exceptions.ImportExportException;
+import org.turing.app.exceptions.SymbolException;
 import org.turing.app.model.ActionTriple;
 import org.turing.app.model.ProgramModel;
 
@@ -19,13 +20,13 @@ public class ProgramImporter {
         this.programModel = programModel;
     }
 
-    public void readIntoModel(JSONObject programData) {
+    public void readIntoModel(JSONObject programData) throws SymbolException {
         readSymbols(programData);
         readStates(programData);
         readTransitions(programData);
     }
 
-    private void readTransitions(JSONObject programData) {
+    private void readTransitions(JSONObject programData) throws SymbolException {
         JSONObject transitions = get(programData, ImportExportConstants.TRANSITIONS_PARAM, JSONObject.class);
         for (Object stateAsObject : transitions.keySet()) {
             State state = getStateFromObject(stateAsObject);
@@ -38,7 +39,7 @@ public class ProgramImporter {
         }
     }
 
-    private ActionTriple getActionTripleFromJsonArray(JSONArray jsonArray) {
+    private ActionTriple getActionTripleFromJsonArray(JSONArray jsonArray) throws SymbolException {
         if(jsonArray.size() != 3) {
             throw new ImportExportException("action triple should be a triple. Makes sense, right?");
         }
@@ -56,7 +57,7 @@ public class ProgramImporter {
         }
     }
 
-    private void readSymbols(JSONObject programData) {
+    private void readSymbols(JSONObject programData) throws SymbolException {
         JSONArray symbols = get(programData, ImportExportConstants.SYMBOLS_PARAM, JSONArray.class);
         for (Object symbolAsObject : symbols) {
             Symbol symbol = getSymbolFromObject(symbolAsObject);

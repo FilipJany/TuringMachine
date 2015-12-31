@@ -1,11 +1,8 @@
 package org.turing.app.views.panels;
 
-import org.turing.app.views.ApplicationConstraints;
+import org.turing.app.views.constants.ApplicationConstraints;
 
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JSlider;
-import javax.swing.SpringLayout;
+import javax.swing.*;
 
 import static javax.swing.SpringLayout.*;
 

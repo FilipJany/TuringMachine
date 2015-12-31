@@ -2,7 +2,10 @@ package org.turing.app.views;
 
 import org.turing.app.controllers.ExecutionController;
 import org.turing.app.controllers.ImportController;
+import org.turing.app.controllers.ProgramEditController;
 import org.turing.app.controllers.TapeEditController;
+import org.turing.app.views.constants.ApplicationConstraints;
+import org.turing.app.views.constants.ApplicationStrings;
 import org.turing.app.views.panels.ProgramTablePanel;
 import org.turing.support.Logger;
 
@@ -17,6 +20,7 @@ public class ProgramFrameView {
     private final ExecutionController executionController;
     private final TapeEditController tapeEditController;
     private final ImportController importController;
+    private final ProgramEditController programEditController;
 
     private ProgramTablePanel tablePanel;
     private MenuBar menuBar;
@@ -24,10 +28,11 @@ public class ProgramFrameView {
     private JFrame frame;
     private SpringLayout layout;
 
-    public ProgramFrameView(ExecutionController executionController, TapeEditController tapeEditController, ImportController importController) {
+    public ProgramFrameView(ExecutionController executionController, TapeEditController tapeEditController, ImportController importController, ProgramEditController programEditController) {
         this.executionController = executionController;
         this.tapeEditController = tapeEditController;
         this.importController = importController;
+        this.programEditController = programEditController;
     }
 
     public void init() {
@@ -35,6 +40,7 @@ public class ProgramFrameView {
 
         createFrameComponents();
         setFrameSettings();
+        updateControllers();
 
         Logger.log("Program frame initialized.");
     }
@@ -75,7 +81,7 @@ public class ProgramFrameView {
 
     private void createAndInitTablePanel()
     {
-        tablePanel = new ProgramTablePanel();
+        tablePanel = new ProgramTablePanel(programEditController);
 
         frame.add(tablePanel);
 
@@ -83,5 +89,9 @@ public class ProgramFrameView {
         layout.putConstraint(EAST, tablePanel, -10, EAST, frame.getContentPane());
         layout.putConstraint(SOUTH, tablePanel, -10, SOUTH, frame.getContentPane());
         layout.putConstraint(WEST, tablePanel, 10, WEST, frame.getContentPane());
+    }
+
+    private void updateControllers() {
+        programEditController.setProgramFrame(frame);
     }
 }

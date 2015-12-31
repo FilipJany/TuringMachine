@@ -2,6 +2,8 @@ package org.turing.app.views;
 
 import org.turing.app.controllers.ImportController;
 import org.turing.app.controllers.ProgramEditController;
+import org.turing.app.views.constants.ApplicationConstraints;
+import org.turing.app.views.constants.ApplicationStrings;
 import org.turing.app.views.panels.ControlPanel;
 import org.turing.app.views.panels.SliderPanel;
 import org.turing.app.views.panels.StatePanel;

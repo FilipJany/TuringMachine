@@ -1,24 +1,33 @@
 package org.turing.app.views.panels;
 
-import org.turing.app.views.ApplicationConstraints;
+import org.turing.app.common.MoveDirection;
+import org.turing.app.common.State;
+import org.turing.app.common.Symbol;
+import org.turing.app.controllers.ProgramEditController;
+import org.turing.app.model.ActionTriple;
+import org.turing.app.model.ProgramModel;
+import org.turing.app.views.constants.ApplicationConstraints;
+import org.turing.app.views.elements.ActionTripleComboBox;
 
 import javax.swing.*;
+import javax.swing.event.CellEditorListener;
+import javax.swing.event.ListSelectionEvent;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.JTableHeader;
+import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.util.EventObject;
 
 import static javax.swing.SpringLayout.*;
+import static org.turing.app.common.BlankSymbol.BLANK;
 
 /**
  * Created by fifi on 15.11.2015.
  */
-public class ProgramTablePanel extends JPanel
-{
-    private String[] colNames;
-    private Object[][] data;
+public class ProgramTablePanel extends JPanel {
+    private final ProgramEditController programEditController;
+
     private TuringTableModel tableModel;
     private TuringTable table;
 
@@ -26,44 +35,28 @@ public class ProgramTablePanel extends JPanel
     private JScrollPane sp;
     private JButton addColumn, deleteColumn, addRow, deleteRow;
 
-    public ProgramTablePanel()
-    {
-        colNames = new String[]{"State", "A", "B", "C", "D"};
-        data = new Object[][]{
-                {"1", "1", "2", "-", "N"},
-                {"2", "3", "1", "T", "4"},
-                {"3", "2", "1", "4", "T"}
-        };
+    public ProgramTablePanel(ProgramEditController programEditController) {
+        this.programEditController = programEditController;
+
         createTablePanel();
     }
 
-    public ProgramTablePanel(String[] colNames, Object[][] data)
-    {
-        this.colNames = colNames;
-        this.data = data;
-        createTablePanel();
-    }
-
-    private void createTablePanel()
-    {
+    private void createTablePanel() {
         createAndInitTableModel();
         initProgramPanelComponents();
         setPanelSettings();
         setComponentsSettings();
         placeComponentsOnPanel();
         addComponentsToPanel();
+        updateControllers();
         addListeners();
     }
 
-    private void createAndInitTableModel()
-    {
-        tableModel = new TuringTableModel();
-        tableModel.setColNames(colNames);
-        tableModel.setData(data);
+    private void createAndInitTableModel() {
+        tableModel = new TuringTableModel(programEditController.getProgramModel());
     }
 
-    private void initProgramPanelComponents()
-    {
+    private void initProgramPanelComponents() {
         layout = new SpringLayout();
         table = new TuringTable(tableModel);
         sp = new JScrollPane(table, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
@@ -75,13 +68,11 @@ public class ProgramTablePanel extends JPanel
         deleteRow = new JButton("-");
     }
 
-    private void setPanelSettings()
-    {
+    private void setPanelSettings() {
         setLayout(layout);
     }
 
-    private void addComponentsToPanel()
-    {
+    private void addComponentsToPanel() {
         add(sp);
         add(addColumn);
         add(deleteColumn);
@@ -89,10 +80,11 @@ public class ProgramTablePanel extends JPanel
         add(deleteRow);
     }
 
-    private void placeComponentsOnPanel()
-    {
-        layout.putConstraint(NORTH, sp, 5, NORTH, this);
-        layout.putConstraint(WEST, sp, 5, WEST, this);
+    private void placeComponentsOnPanel() {
+        layout.putConstraint(NORTH, sp, 2, NORTH, this);
+        layout.putConstraint(SOUTH, sp, -20, SOUTH, this);
+        layout.putConstraint(WEST, sp, 2, WEST, this);
+        layout.putConstraint(EAST, sp, -40, EAST, this);
 
         layout.putConstraint(NORTH, addColumn, 5, NORTH, this);
         layout.putConstraint(WEST, addColumn, 5, EAST, sp);
@@ -100,15 +92,14 @@ public class ProgramTablePanel extends JPanel
         layout.putConstraint(NORTH, deleteColumn, 5, NORTH, this);
         layout.putConstraint(WEST, deleteColumn, 2, EAST, addColumn);
 
-        layout.putConstraint(NORTH, addRow, 5, SOUTH, sp);
-        layout.putConstraint(WEST, addRow, 10, WEST, this);
+        layout.putConstraint(NORTH, addRow, 2, SOUTH, sp);
+        layout.putConstraint(WEST, addRow, 4, WEST, this);
 
-        layout.putConstraint(NORTH, deleteRow, 5, SOUTH, sp);
+        layout.putConstraint(NORTH, deleteRow, 2, SOUTH, sp);
         layout.putConstraint(WEST, deleteRow, 2, EAST, addRow);
     }
 
-    private void setComponentsSettings()
-    {
+    private void setComponentsSettings() {
         addColumn.setPreferredSize(new Dimension(ApplicationConstraints.tablePanelButtonWidth, ApplicationConstraints.tablePanelButtonHeight));
         deleteColumn.setPreferredSize(new Dimension(ApplicationConstraints.tablePanelButtonWidth, ApplicationConstraints.tablePanelButtonHeight));
         addRow.setPreferredSize(new Dimension(ApplicationConstraints.tablePanelButtonWidth, ApplicationConstraints.tablePanelButtonHeight));
@@ -116,85 +107,62 @@ public class ProgramTablePanel extends JPanel
         sp.setPreferredSize(new Dimension(ApplicationConstraints.tableMinimalWidth, ApplicationConstraints.tableMinimalHeight));
     }
 
-    private void addListeners()
-    {
-        addColumn.addActionListener(new ActionListener()
-        {
-            @Override
-            public void actionPerformed(ActionEvent e)
-            {
-                //TODO:Implement
-            }
-        });
-        deleteColumn.addActionListener(new ActionListener()
-        {
-            @Override
-            public void actionPerformed(ActionEvent e)
-            {
-                //TODO:Implement
-            }
-        });
+    private void updateControllers() {
+        programEditController.setProgramTable(table);
+    }
 
-        addRow.addActionListener(new ActionListener()
-        {
-            @Override
-            public void actionPerformed(ActionEvent e)
-            {
-                //TODO:Implement
-            }
-        });
-        deleteRow.addActionListener(new ActionListener()
-        {
-            @Override
-            public void actionPerformed(ActionEvent e)
-            {
-                //TODO:Implement
-            }
-        });
+    private void addListeners() {
+        addRow.addActionListener(e -> programEditController.onStateAddition());
+        deleteRow.addActionListener(e -> programEditController.onStateDeletion());
+
+        addColumn.addActionListener(e -> programEditController.onSymbolAddition());
+        deleteColumn.addActionListener(e -> programEditController.onSymbolDeletion());
     }
 }
 
-class TuringTable extends JTable
-{
-    private final int INTER_CELL_SPACE_WIDTH = 1;   //space between cells
-    private final int ROW_HEIGHT = 12;              //row height
+class TuringTable extends JTable {
+    private final int INTER_CELL_SPACE = 1;   //space between cells
+    private final int ROW_HEIGHT = 24;        //row height
 
     private static final CellRendererPane CELL_RENDERER = new CellRendererPane();
+
+    private int columnWidth = ApplicationConstraints.columnWidth;
+    private int selectedColumnWidth = ApplicationConstraints.selectedColumnWidth;
+
     /**
-     * KOnstruktor klasy QTable
+     * Konstruktor klasy JTable
+     *
      * @param tableModel - model tabeli
      */
-    public TuringTable(AbstractTableModel tableModel)
-    {
+    public TuringTable(TuringTableModel tableModel) {
         super(tableModel);
-        init();
+        init(tableModel.getProgramModel());
     }
+
     /**
      * Inicjalizacja Tabeli
      */
-    private void init()
-    {
+    private void init(ProgramModel model) {
+        setDefaultRenderer(ActionTriple.class, new ActionTripleCellRenderer(model));
+        //setDefaultEditor(ActionTriple.class, new ActionTripleCellEditor(model));
         setShowGrid(true);
         setTableHeader(createHeader());
-        setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+        setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         setAutoscrolls(true);
         setGridColor(Color.GRAY.brighter());
         setRowHeight(ROW_HEIGHT);
-        Dimension dim = new Dimension(INTER_CELL_SPACE_WIDTH, INTER_CELL_SPACE_WIDTH);
+        setCellSelectionEnabled(true);
+        Dimension dim = new Dimension(INTER_CELL_SPACE, INTER_CELL_SPACE);
         setIntercellSpacing(new Dimension(dim));
     }
 
-    private JTableHeader createHeader()
-    {
-        return new JTableHeader(getColumnModel())
-        {
+    private JTableHeader createHeader() {
+        return new JTableHeader(getColumnModel()) {
             @Override
-            protected void paintComponent(Graphics g)
-            {
+            protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
-                JViewport vport = (JViewport)table.getParent();
-                if(vport != null && table.getWidth() < vport.getWidth())
-                {
+                JViewport vport = (JViewport) table.getParent();
+                if (vport != null && table.getWidth() < vport.getWidth()) {
                     int x = table.getWidth();
                     int width = vport.getWidth() - table.getWidth();
                     paintHeader(g, getTable(), x, width);
@@ -203,66 +171,257 @@ class TuringTable extends JTable
         };
     }
 
-    private static void paintHeader(Graphics g, JTable t, int x, int width)
-    {
+    private static void paintHeader(Graphics g, JTable t, int x, int width) {
         TableCellRenderer renderer = t.getTableHeader().getDefaultRenderer();
         Component comp = renderer.getTableCellRendererComponent(t, "", false, false, -1, 2);
         comp.setBounds(0, 0, width, t.getTableHeader().getHeight());
-        ((JComponent)comp).setOpaque(false);
+        ((JComponent) comp).setOpaque(false);
         CELL_RENDERER.paintComponent(g, comp, null, x, 0, width, t.getTableHeader().getHeight(), true);
     }
+
+    @Override
+    public void doLayout() {
+        super.doLayout();
+
+        if (getSelectedColumn() != -1) {
+            for (int i = 1; i < getColumnCount(); i++)
+                if (i == getSelectedColumn())
+                    getColumnModel().getColumn(i).setPreferredWidth(selectedColumnWidth);
+                else
+                    getColumnModel().getColumn(i).setPreferredWidth(columnWidth);
+
+            repaint();
+        }
+    }
+
+    @Override
+    public void columnSelectionChanged(ListSelectionEvent e) {
+        super.columnSelectionChanged(e);
+        doLayout();
+
+    }
+
+
 }
 
-class TuringTableModel extends AbstractTableModel
-{
-    private String[] colNames;
-    private Object[][] data;//[row][col]
+class TuringTableModel extends AbstractTableModel {
+    private final ProgramModel programModel;
 
-    public void setColNames(String[] colNames)
-    {
-        this.colNames = colNames;
-    }
-
-    public void setData(Object[][] data)
-    {
-        this.data = data;
+    TuringTableModel(ProgramModel programModel) {
+        this.programModel = programModel;
     }
 
     @Override
-    public int getRowCount()
-    {
-        return data.length;
+    public int getRowCount() {
+        return programModel.getAvailableStates().size();
     }
 
     @Override
-    public int getColumnCount()
-    {
-        return colNames.length;
+    public int getColumnCount() {
+        return programModel.getAvailableSymbols().size() + 1;
     }
 
     @Override
-    public Object getValueAt(int rowIndex, int columnIndex)
-    {
-        return data[rowIndex][columnIndex];
+    public Class<?> getColumnClass(int columnIndex) {
+        return columnIndex == 0 ? String.class : ActionTriple.class;
     }
 
     @Override
-    public String getColumnName(int col)
-    {
-        return colNames[col];
+    public Object getValueAt(int rowIndex, int columnIndex) {
+        if (columnIndex == 0)
+            return programModel.getStateAt(rowIndex).getName();
+        else
+            return programModel.getActionForStateAndSymbol(
+                    programModel.getStateAt(rowIndex),
+                    programModel.getSymbolAt(columnIndex - 1));
     }
 
     @Override
-    public boolean isCellEditable(int row, int col)
-    {
+    public String getColumnName(int columnIndex) {
+        if (columnIndex == 0)
+            return "";
+        else {
+            Symbol columnSymbol = programModel.getSymbolAt(columnIndex - 1);
+            return columnSymbol.equals(BLANK) ? BLANK.visibleRep() : columnSymbol.getValue();
+        }
+    }
+
+    @Override
+    public boolean isCellEditable(int row, int col) {
+        return col != 0;
+    }
+
+    public ProgramModel getProgramModel() {
+        return programModel;
+    }
+}
+
+class ActionTripleCellEditor implements TableCellEditor {
+
+    ActionTripleCell<JLabel> whenDeselected;
+    ActionTripleCell<JComboBox> whenSelected;
+
+    public ActionTripleCellEditor(ProgramModel model) {
+        whenDeselected = new ActionTripleCell<JLabel>(model, new JLabel(), new JLabel(), new JLabel()) {
+            @Override
+            ActionTripleCell<JLabel> reload(ActionTriple value) {
+                nextState.setText(value.getState().getName());
+                nextSymbol.setText(value.getSymbol().equals(BLANK) ? BLANK.visibleRep() : value.getSymbol().getValue());
+                nextMove.setText(value.getMoveDirection().getSymbol());
+                return this;
+            }
+        };
+        whenSelected = new ActionTripleCell<JComboBox>(model, new ActionTripleComboBox<State>(),
+                new ActionTripleComboBox<Symbol>(), new ActionTripleComboBox<>(MoveDirection.values())) {
+            @Override
+            ActionTripleCell<JComboBox> reload(ActionTriple value) {
+                nextState.removeAllItems();
+                for (State s : model.getAvailableStates())
+                    nextState.addItem(s);
+                nextState.setSelectedItem(value.getState());
+                nextState.setFocusable(true);
+
+                nextSymbol.removeAllItems();
+                for (Symbol s : model.getAvailableSymbols())
+                    nextSymbol.addItem(s);
+                nextSymbol.setSelectedItem(value.getSymbol());
+
+                nextMove.setSelectedItem(value.getMoveDirection());
+
+                return this;
+            }
+        };
+    }
+
+    @Override
+    public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
+        if (value instanceof ActionTriple) {
+            if (isSelected)
+                return whenSelected.reload((ActionTriple) value);
+            else
+                return whenDeselected.reload((ActionTriple) value);
+        } else {
+            return null;
+        }
+    }
+
+    @Override
+    public Object getCellEditorValue() {
+        return null;
+    }
+
+    @Override
+    public boolean isCellEditable(EventObject anEvent) {
         return true;
     }
+
+    @Override
+    public boolean shouldSelectCell(EventObject anEvent) {
+        return false;
+    }
+
+    @Override
+    public boolean stopCellEditing() {
+        return false;
+    }
+
+    @Override
+    public void cancelCellEditing() {
+
+    }
+
+    @Override
+    public void addCellEditorListener(CellEditorListener l) {
+
+    }
+
+    @Override
+    public void removeCellEditorListener(CellEditorListener l) {
+
+    }
 }
 
-class TuringTableException extends Exception
-{
-    public TuringTableException(String s)
-    {
-        System.err.println(s);
+class ActionTripleCellRenderer implements TableCellRenderer {
+
+    ActionTripleCell<JLabel> whenDeselected;
+    ActionTripleCell<JComboBox> whenSelected;
+
+    public ActionTripleCellRenderer(ProgramModel model) {
+        whenDeselected = new ActionTripleCell<JLabel>(model, new JLabel(), new JLabel(), new JLabel()) {
+            @Override
+            ActionTripleCell<JLabel> reload(ActionTriple value) {
+                nextState.setText(value.getState().getName());
+                nextSymbol.setText(value.getSymbol().equals(BLANK) ? BLANK.visibleRep() : value.getSymbol().getValue());
+                nextMove.setText(value.getMoveDirection().getSymbol());
+                return this;
+            }
+        };
+        whenSelected = new ActionTripleCell<JComboBox>(model, new ActionTripleComboBox<State>(),
+                new ActionTripleComboBox<Symbol>(), new ActionTripleComboBox<>(MoveDirection.values())) {
+            @Override
+            ActionTripleCell<JComboBox> reload(ActionTriple value) {
+                nextState.removeAllItems();
+                for (State s : model.getAvailableStates())
+                    nextState.addItem(s);
+                nextState.setSelectedItem(value.getState());
+
+                nextSymbol.removeAllItems();
+                for (Symbol s : model.getAvailableSymbols())
+                    nextSymbol.addItem(s);
+                nextSymbol.setSelectedItem(value.getSymbol());
+
+                nextMove.setSelectedItem(value.getMoveDirection());
+
+                return this;
+            }
+        };
+    }
+
+    @Override
+    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+        if (value instanceof ActionTriple) {
+            if (isSelected)
+                return whenSelected.reload((ActionTriple) value);
+            else
+                return whenDeselected.reload((ActionTriple) value);
+        } else {
+            return null;
+        }
+    }
+}
+
+abstract class ActionTripleCell<T extends Component> extends JPanel {
+
+    ProgramModel model;
+
+    T nextState;
+    T nextSymbol;
+    T nextMove;
+
+    public ActionTripleCell(ProgramModel model, T nextState, T nextSymbol, T nextMove) {
+        this.model = model;
+        this.nextState = nextState;
+        this.nextSymbol = nextSymbol;
+        this.nextMove = nextMove;
+
+        initLayout();
+    }
+
+    abstract ActionTripleCell<T> reload(ActionTriple value);
+
+    private void initLayout() {
+        setLayout(new GridBagLayout());
+
+        GridBagConstraints c = new GridBagConstraints();
+
+        c.gridx = 0;
+        c.gridy = 0;
+        add(nextState, c);
+
+        c.gridx = 1;
+        add(nextSymbol, c);
+
+        c.gridx = 2;
+        add(nextMove, c);
     }
 }
