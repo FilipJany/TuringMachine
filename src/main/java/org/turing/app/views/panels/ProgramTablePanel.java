@@ -144,7 +144,7 @@ class TuringTable extends JTable {
      */
     private void init(ProgramModel model) {
         setDefaultRenderer(ActionTriple.class, new ActionTripleCellRenderer(model));
-        //setDefaultEditor(ActionTriple.class, new ActionTripleCellEditor(model));
+        setDefaultEditor(ActionTriple.class, new ActionTripleCellEditor(model));
         setShowGrid(true);
         setTableHeader(createHeader());
         setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
@@ -256,12 +256,17 @@ class TuringTableModel extends AbstractTableModel {
     }
 }
 
-class ActionTripleCellEditor implements TableCellEditor {
+class ActionTripleCellEditor extends AbstractCellEditor implements TableCellEditor {
 
     ActionTripleCell<JLabel> whenDeselected;
     ActionTripleCell<JComboBox> whenSelected;
 
+    ProgramModel programModel;
+    int row;
+    int column;
+
     public ActionTripleCellEditor(ProgramModel model) {
+        programModel = model;
         whenDeselected = new ActionTripleCell<JLabel>(model, new JLabel(), new JLabel(), new JLabel()) {
             @Override
             ActionTripleCell<JLabel> reload(ActionTriple value) {
@@ -279,7 +284,6 @@ class ActionTripleCellEditor implements TableCellEditor {
                 for (State s : model.getAvailableStates())
                     nextState.addItem(s);
                 nextState.setSelectedItem(value.getState());
-                nextState.setFocusable(true);
 
                 nextSymbol.removeAllItems();
                 for (Symbol s : model.getAvailableSymbols())
@@ -290,19 +294,22 @@ class ActionTripleCellEditor implements TableCellEditor {
 
                 return this;
             }
+
+            @Override
+            ActionTriple getValue() {
+                return new ActionTriple((State) nextState.getSelectedItem(),
+                        (Symbol) nextSymbol.getSelectedItem(),
+                        (MoveDirection) nextMove.getSelectedItem());
+            }
         };
     }
 
     @Override
     public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
-        if (value instanceof ActionTriple) {
-            if (isSelected)
-                return whenSelected.reload((ActionTriple) value);
-            else
-                return whenDeselected.reload((ActionTriple) value);
-        } else {
-            return null;
-        }
+        this.row = row;
+        this.column = column;
+        return whenSelected.reload((ActionTriple) value)
+                    .setSelectionBackground(table.getSelectionBackground());
     }
 
     @Override
@@ -317,12 +324,13 @@ class ActionTripleCellEditor implements TableCellEditor {
 
     @Override
     public boolean shouldSelectCell(EventObject anEvent) {
-        return false;
+        return true;
     }
 
     @Override
     public boolean stopCellEditing() {
-        return false;
+        programModel.addNewTransition(programModel.getStateAt(row), programModel.getSymbolAt(column-1), whenSelected.getValue());
+        return true;
     }
 
     @Override
@@ -381,7 +389,8 @@ class ActionTripleCellRenderer implements TableCellRenderer {
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
         if (value instanceof ActionTriple) {
             if (isSelected)
-                return whenSelected.reload((ActionTriple) value);
+                return whenSelected.reload((ActionTriple) value)
+                        .setSelectionBackground(table.getSelectionBackground());
             else
                 return whenDeselected.reload((ActionTriple) value);
         } else {
@@ -398,7 +407,7 @@ abstract class ActionTripleCell<T extends Component> extends JPanel {
     T nextSymbol;
     T nextMove;
 
-    public ActionTripleCell(ProgramModel model, T nextState, T nextSymbol, T nextMove) {
+    ActionTripleCell(ProgramModel model, T nextState, T nextSymbol, T nextMove) {
         this.model = model;
         this.nextState = nextState;
         this.nextSymbol = nextSymbol;
@@ -408,6 +417,15 @@ abstract class ActionTripleCell<T extends Component> extends JPanel {
     }
 
     abstract ActionTripleCell<T> reload(ActionTriple value);
+
+    ActionTriple getValue() {
+        return null;
+    }
+
+    ActionTripleCell<T> setSelectionBackground(Color c) {
+        setBackground(c);
+        return this;
+    }
 
     private void initLayout() {
         setLayout(new GridBagLayout());
