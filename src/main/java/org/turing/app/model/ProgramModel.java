@@ -6,7 +6,7 @@ import org.turing.app.common.State;
 import org.turing.app.common.Symbol;
 import org.turing.support.Logger;
 
-import java.util.Set;
+import java.util.List;
 
 import static com.google.common.collect.Sets.newHashSet;
 import static java.util.Objects.isNull;
@@ -16,8 +16,8 @@ import static org.turing.app.common.HaltState.HALT;
 public class ProgramModel {
 
     private Table<State, Symbol, ActionTriple> transitionTable;
-    private Set<State> legalStates;
-    private Set<Symbol> legalSymbols;
+    private List<State> legalStates;
+    private List<Symbol> legalSymbols;
 
     public ProgramModel() {
         initialize();
@@ -25,16 +25,20 @@ public class ProgramModel {
 
     private void initialize() {
         transitionTable = HashBasedTable.create();
-        legalStates = Sets.newHashSet(HALT);
-        legalSymbols = Sets.newHashSet(BLANK);
+        legalStates = Lists.newArrayList(HALT);
+        legalSymbols = Lists.newArrayList(BLANK);
     }
 
     public void addNewState(State state) {
-        legalStates.add(state);
+        if(!legalStates.contains(state)) {
+            legalStates.add(state);
+        }
     }
 
     public void addNewSymbol(Symbol symbol) {
-        legalSymbols.add(symbol);
+        if(!legalSymbols.contains(symbol)) {
+            legalSymbols.add(symbol);
+        }
     }
 
     public void addNewTransition(State state, Symbol symbol, ActionTriple actionTriple) {
@@ -47,15 +51,11 @@ public class ProgramModel {
     }
 
     public State getStateAt(int index) {
-        Logger.warning("Jacku, implement this method please.");
-        //TODO: legalStates should be ordered itself - it's just temporary, excessive implementation
-        return Lists.newArrayList(legalStates).get(index);
+        return legalStates.get(index);
     }
 
     public Symbol getSymbolAt(int index) {
-        Logger.warning("Jacku, implement this method please.");
-        //TODO: legalSymbols should be ordered itself - it's just temporary, excessive implementation
-        return Lists.newArrayList(legalSymbols).get(index);
+        return legalSymbols.get(index);
     }
 
     public void deleteState(State state) {
@@ -94,12 +94,12 @@ public class ProgramModel {
         initialize();
     }
 
-    public Set<Symbol> getAvailableSymbols() {
-        return ImmutableSet.copyOf(legalSymbols);
+    public List<Symbol> getAvailableSymbols() {
+        return ImmutableList.copyOf(legalSymbols);
     }
 
-    public Set<State> getAvailableStates() {
-        return ImmutableSet.copyOf(legalStates);
+    public List<State> getAvailableStates() {
+        return ImmutableList.copyOf(legalStates);
     }
 
     public Table<State, Symbol, ActionTriple> getTransitionTable() {
