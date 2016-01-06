@@ -16,16 +16,16 @@ public class ProgramImporterTest {
 
     @Test
     public void dupa() throws Exception {
-        String json = "{\"transitions\":{\"doopa\":{\"dupa\":[\"HALT|final\",\"\",\"LEFT\"]}},\"symbols\":[\"dupa\",\"\"],\"states\":[\"doopa\",\"HALT|final\"]}";
+        String json = "{\"transitions\":{\"doopa\":{\"A\":[\"HALT|final\",\"\",\"LEFT\"]}},\"symbols\":[\"\",\"A\"],\"states\":[\"doopa\",\"HALT|final\"]}";
         ProgramModel programModel = new ProgramModel();
         ProgramImporter programImporter = new ProgramImporter(programModel);
 
         programImporter.readIntoModel((JSONObject) JSONValue.parse(json));
 
-        assertEquals(Sets.newHashSet(new Symbol("dupa"), BlankSymbol.BLANK), programModel.getAvailableSymbols());
-        assertEquals(Sets.newHashSet(new State("doopa", false), HaltState.HALT), programModel.getAvailableStates());
+        assertEquals(Sets.newHashSet(new Symbol("A"), BlankSymbol.BLANK), Sets.newHashSet(programModel.getAvailableSymbols()));
+        assertEquals(Sets.newHashSet(new State("doopa", false), HaltState.HALT), Sets.newHashSet(programModel.getAvailableStates()));
         Table<State, Symbol, ActionTriple> expectedTransitionTable = HashBasedTable.create();
-        expectedTransitionTable.put(new State("doopa", false), new Symbol("dupa"), new ActionTriple(HaltState.HALT, BlankSymbol.BLANK, MoveDirection.LEFT));
+        expectedTransitionTable.put(new State("doopa", false), new Symbol("A"), new ActionTriple(HaltState.HALT, BlankSymbol.BLANK, MoveDirection.LEFT));
         assertEquals(expectedTransitionTable, programModel.getTransitionTable());
     }
 }
