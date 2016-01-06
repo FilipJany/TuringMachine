@@ -4,6 +4,7 @@ import org.turing.app.controllers.ExecutionController;
 import org.turing.app.controllers.ImportController;
 import org.turing.app.controllers.ProgramEditController;
 import org.turing.app.controllers.TapeEditController;
+import org.turing.app.engine.TuringMachine;
 import org.turing.app.model.DataModel;
 import org.turing.app.model.ProgramModel;
 import org.turing.app.views.MainFrameView;
@@ -26,6 +27,8 @@ public class Main {
 
         final ProgramFrameView mainFrameView = new ProgramFrameView(executionController, tapeEditController, importController, programEditController);
         final MainFrameView programFrameView = new MainFrameView(programEditController, importController);
+
+        final TuringMachine engine = new TuringMachine(programModel, dataModel);
 
         Application application = new Application(mainFrameView, programFrameView);
 

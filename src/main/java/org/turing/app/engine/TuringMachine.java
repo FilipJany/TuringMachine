@@ -1,10 +1,13 @@
 package org.turing.app.engine;
 
+import org.turing.app.common.State;
 import org.turing.app.common.Symbol;
 import org.turing.app.model.ActionTriple;
 import org.turing.app.model.DataModel;
 import org.turing.app.model.ProgramModel;
-import org.turing.app.exceptions.TuringEngineException;
+import org.turing.support.Logger;
+
+import java.util.Stack;
 
 /**
  * Created by FiFi on 12/7/2015.
@@ -14,83 +17,185 @@ public class TuringMachine implements ITuringMachine
     private ProgramModel programModel;
     private DataModel dataModel;
 
-    private float speedMultiplier = 1.0f;
-    private boolean shouldWorkStepByStep = false;
+    private Stack<ActionTriple> previousActions;//actions that have already been completed
+    private ActionTriple previousAction; //action that has already been completed
 
-    private ActionTriple currenttriple, nextTriple;
-    private Symbol currentSymbol;
+    private boolean isOnline = false;
 
+    //Constructors Section (Engine needs to be started manually!!)
     public TuringMachine()
     {
-        if(programModel == null)
-            programModel = new ProgramModel();
-        if(dataModel == null)
-            dataModel = new DataModel();
-        try
-        {
-            loadDataForFirstTime();
-        }
-        catch(Exception e)
-        {
-            System.err.println(e.getMessage());
-        }
+        previousActions = new Stack<>();
     }
+
 
     public TuringMachine(ProgramModel programModel, DataModel dataModel)
     {
+        previousActions = new Stack<>();
         this.programModel = programModel;
         this.dataModel = dataModel;
-        try
+    }
+
+    //Data & Program Model Setters (if they are added later)
+    public void setProgramModel(ProgramModel programModel)
+    {
+        if(programModel == null)
+            this.programModel = programModel;
+        else
+            Logger.log(TuringEngineConstraints.ProgramAlreadyLoaded);
+    }
+
+    public void setDataModel(DataModel dataModel)
+    {
+        if(dataModel == null)
+            this.dataModel = dataModel;
+        else
+            Logger.log(TuringEngineConstraints.DataAlreadyLoaded);
+    }
+
+    //Check Section - checks if everything is prepared to run engine
+    private void checkIfProgramIsLoaded() throws EngineException
+    {
+        if(programModel == null)
+            throw new EngineException(TuringEngineConstraints.NoProgramLoadedExceptionMessage);
+        if(programModel.getAvailableStates().size() < 1)
+            throw new EngineException(TuringEngineConstraints.NoStatesInProgramFound);
+        if(programModel.getAvailableSymbols().size() < 1)
+            throw new EngineException(TuringEngineConstraints.NoSymbolsInProgramFound);
+        if(programModel.getTransitionTable().size() < 1)
+            throw new EngineException(TuringEngineConstraints.NoTransitionsInProgramFound);
+    }
+
+    private void checkIfDataHasBeenLoaded() throws EngineException
+    {
+        if(dataModel == null)
+            throw new EngineException(TuringEngineConstraints.NoDataLoadedExceptionMessage);
+    }
+
+    //"Work" Section - performs given work (steps forward || backwards)
+    //Start Engine work
+    public void startEngine()
+    {
+        if(!isOnline)
         {
-            loadDataForFirstTime();
+            try
+            {
+                checkIfProgramIsLoaded();
+                checkIfDataHasBeenLoaded();
+            }
+            catch(Exception e)
+            {
+                Logger.log(e.getMessage());
+            }
+            //If everything is okay, load starting data to engine
+            Symbol newSymbol = dataModel.read();
+            State newState = dataModel.getState();
+            previousAction = programModel.getActionForStateAndSymbol(newState, newSymbol);
         }
-        catch(Exception e)
+        isOnline = true;
+    }
+
+    //Stop engine and clear the execution stack
+    public void stopEngine()
+    {
+        if(isOnline)
         {
-            System.err.println(e.getMessage());
+            previousActions.clear();
+            isOnline = false;
         }
     }
 
-    private void loadDataForFirstTime() throws Exception
+    //Restarts Engine (Clears the execution stack too)
+    public void restartEngine()
     {
-        if(programModel == null)
-            throw new TuringEngineException("Program Model is broken, please check if all data has been loaded correctly.");
-        if(dataModel == null)
-            throw new TuringEngineException("Data Model is broken, please check if all data has been loaded correctly.");
-        currentSymbol = dataModel.read();
+        stopEngine();
+        startEngine();
     }
 
     @Override
     public void stepForward()
     {
+        previousActions.push(previousAction);
+
+        switch (previousAction.getMoveDirection())
+        {
+            case LEFT:
+                dataModel.moveLeft();
+            break;
+            case RIGHT:
+                dataModel.moveRight();
+            break;
+            default:
+                //do nothing, just stay as you were standing (NONE move)
+            break;
+        }
         try
         {
-            wait((long) (TuringEngineConstraints.timeoutValue * speedMultiplier));
+            getNextTripleAndReplaceOldOne();
         }
-        catch(Exception e)
+        catch (Exception e)
         {
-            System.err.println(e.getMessage());
+            Logger.log(e.getMessage());
         }
     }
 
     @Override
     public void stepBackward()
     {
-        try
+        if(previousActions.size() > 0)
         {
-            wait((long) (TuringEngineConstraints.timeoutValue * speedMultiplier));
+            previousAction = previousActions.pop();
+            switch (previousAction.getMoveDirection())
+            {
+                case LEFT:
+                    dataModel.moveRight();
+                    break;
+                case RIGHT:
+                    dataModel.moveLeft();
+                    break;
+                default:
+                    //do nothing, just stay as you were standing (NONE move)
+                    break;
+            }
         }
-        catch(Exception e)
-        {
-            System.err.println(e.getMessage());
-        }
+        else
+            Logger.log(TuringEngineConstraints.PreviousSymbolStackEmpty);
+    }
+
+    private void getNextTripleAndReplaceOldOne() throws EngineException
+    {
+        Symbol newSymbol = dataModel.read();
+        State newState = dataModel.getState();
+        ActionTriple newActionTriple = programModel.getActionForStateAndSymbol(newState, newSymbol);
+        if(newActionTriple == null)
+            throw new EngineException(TuringEngineConstraints.NoActionForStateAndSymbolFound);
+        previousAction = newActionTriple;
+    }
+
+    //Rest of interface methods
+    @Override
+    public ActionTriple getCurrentActionTriple()
+    {
+        return previousAction;
     }
 
     @Override
-    public void updateSpeed(float newMultiplier)
+    public ActionTriple getLatestCompletedActionTriple()
     {
-        this.speedMultiplier = newMultiplier;
-        shouldWorkStepByStep =  speedMultiplier == 0.0f;
+        return previousActions.get(0);
     }
 
+    @Override
+    public Stack<ActionTriple> getExecutionStack()
+    {
+        return previousActions;
+    }
+}
 
+class EngineException extends Exception
+{
+    public EngineException(String message)
+    {
+        super(message);
+    }
 }
