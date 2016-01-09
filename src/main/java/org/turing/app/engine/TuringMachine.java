@@ -1,5 +1,6 @@
 package org.turing.app.engine;
 
+import org.turing.app.common.MoveDirection;
 import org.turing.app.common.State;
 import org.turing.app.common.Symbol;
 import org.turing.app.model.ActionTriple;
@@ -115,20 +116,19 @@ public class TuringMachine implements ITuringMachine
     @Override
     public void stepForward()
     {
-        previousActions.push(previousAction);
+        //Change direction of move for 'back' action
+        ActionTriple returnAction;
+        if(previousAction.getMoveDirection() == MoveDirection.LEFT)
+            returnAction = new ActionTriple(previousAction.getState(), previousAction.getSymbol(), MoveDirection.RIGHT);
+        else if(previousAction.getMoveDirection() == MoveDirection.RIGHT)
+            returnAction = new ActionTriple(previousAction.getState(), previousAction.getSymbol(), MoveDirection.LEFT);
+        else
+            returnAction = new ActionTriple(previousAction.getState(), previousAction.getSymbol(), MoveDirection.NONE);
+        previousActions.push(returnAction);
 
-        switch (previousAction.getMoveDirection())
-        {
-            case LEFT:
-                dataModel.moveLeft();
-            break;
-            case RIGHT:
-                dataModel.moveRight();
-            break;
-            default:
-                //do nothing, just stay as you were standing (NONE move)
-            break;
-        }
+        //Continue with forward step
+        makeStep(previousAction.getMoveDirection());
+
         try
         {
             getNextTripleAndReplaceOldOne();
@@ -145,21 +145,29 @@ public class TuringMachine implements ITuringMachine
         if(previousActions.size() > 0)
         {
             previousAction = previousActions.pop();
-            switch (previousAction.getMoveDirection())
-            {
-                case LEFT:
-                    dataModel.moveRight();
-                    break;
-                case RIGHT:
-                    dataModel.moveLeft();
-                    break;
-                default:
-                    //do nothing, just stay as you were standing (NONE move)
-                    break;
-            }
+            //Set back the state
+            dataModel.setState(previousAction.getState());
+            //Set proper symbol
+            makeStep(previousAction.getMoveDirection());
         }
         else
             Logger.log(TuringEngineConstraints.PreviousSymbolStackEmpty);
+    }
+
+    private void makeStep(MoveDirection direction)
+    {
+        switch (direction)
+        {
+            case LEFT:
+                dataModel.moveLeft();
+                break;
+            case RIGHT:
+                dataModel.moveRight();
+                break;
+            default:
+                //do nothing, just stay as you were standing (NONE move)
+                break;
+        }
     }
 
     private void getNextTripleAndReplaceOldOne() throws EngineException
