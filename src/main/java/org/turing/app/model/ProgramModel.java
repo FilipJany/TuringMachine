@@ -4,7 +4,6 @@ import com.google.common.collect.*;
 import org.turing.app.common.MoveDirection;
 import org.turing.app.common.State;
 import org.turing.app.common.Symbol;
-import org.turing.support.Logger;
 
 import java.util.List;
 
@@ -81,12 +80,10 @@ public class ProgramModel {
     }
 
     public void renameSymbol() {
-        Logger.warning("Jacku, implement this method please.");
         // TODO: Discuss
     }
 
     public void renameState() {
-        Logger.warning("Jacku, implement this method please.");
         //TODO: Discuss
     }
 

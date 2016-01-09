@@ -1,7 +1,9 @@
 package org.turing.app.views;
 
+import org.turing.app.controllers.ExecutionController;
 import org.turing.app.controllers.ImportController;
 import org.turing.app.controllers.ProgramEditController;
+import org.turing.app.controllers.TapeEditController;
 import org.turing.app.views.constants.ApplicationConstraints;
 import org.turing.app.views.constants.ApplicationStrings;
 import org.turing.app.views.panels.ControlPanel;
@@ -17,8 +19,10 @@ import static javax.swing.SpringLayout.*;
 
 public class MainFrameView {
 
-    private final ProgramEditController programEditController;
+    private final ExecutionController executionController;
+    private final TapeEditController tapeEditController;
     private final ImportController importController;
+    private final ProgramEditController programEditController;
 
     private ControlPanel controlPanel;
     private SliderPanel sliderPanel;
@@ -29,9 +33,12 @@ public class MainFrameView {
     private JFrame frame;
     private SpringLayout layout;
 
-    public MainFrameView(ProgramEditController programEditController, ImportController importController) {
-        this.programEditController = programEditController;
+
+    public MainFrameView(ExecutionController executionController, TapeEditController tapeEditController, ImportController importController, ProgramEditController programEditController) {
+        this.executionController = executionController;
+        this.tapeEditController = tapeEditController;
         this.importController = importController;
+        this.programEditController = programEditController;
     }
 
     public void init() {

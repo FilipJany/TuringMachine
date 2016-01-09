@@ -25,8 +25,8 @@ public class Main {
         final TapeEditController tapeEditController = new TapeEditController(dataModel);
         final ImportController importController = new ImportController(dataModel, programModel);
 
-        final ProgramFrameView mainFrameView = new ProgramFrameView(executionController, tapeEditController, importController, programEditController);
-        final MainFrameView programFrameView = new MainFrameView(programEditController, importController);
+        final ProgramFrameView mainFrameView = new ProgramFrameView(importController, programEditController);
+        final MainFrameView programFrameView = new MainFrameView(executionController, tapeEditController, importController, programEditController);
 
         final TuringMachine engine = new TuringMachine(programModel, dataModel);
 
