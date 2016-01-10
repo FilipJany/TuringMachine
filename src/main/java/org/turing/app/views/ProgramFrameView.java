@@ -85,6 +85,6 @@ public class ProgramFrameView {
     }
 
     private void updateControllers() {
-        programEditController.setProgramFrame(frame);
+        programEditController.setProgramTable(tablePanel.getTable());
     }
 }

@@ -1,10 +1,16 @@
 package org.turing.app.views.panels;
 
+import org.turing.app.common.Symbol;
+import org.turing.app.controllers.TapeEditController;
+import org.turing.app.exceptions.TapeException;
 import org.turing.app.views.constants.ApplicationConstraints;
 
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.util.LinkedList;
+import java.util.List;
 
 import static javax.swing.SpringLayout.*;
 
@@ -12,37 +18,56 @@ import static javax.swing.SpringLayout.*;
  * Created by FiFi on 2015-11-11.
  */
 public class TapePanel extends JPanel {
+    private final TapeEditController tapeEditController;
+
     private int width, height;
     private JButton leftButton, rightButton;
-    private java.util.List<JTextField> tape;
+    private List<JTextField> tape;
     private JLabel head;
     private SpringLayout layout;
 
-    public TapePanel() {
-        width = ApplicationConstraints.minimalTapePanelWidth;
-        height = ApplicationConstraints.minimalTapePanelHeight;
-        initTapePanel();
+    private boolean isMoving;
+
+    public TapePanel(TapeEditController tapeEditController) {
+        this(ApplicationConstraints.minimalTapePanelWidth,
+                ApplicationConstraints.minimalTapePanelHeight,
+                tapeEditController);
     }
 
-    public TapePanel(int width, int height) throws TapePanelException {
-        if (width < ApplicationConstraints.minimalTapePanelWidth || height < ApplicationConstraints.minimalTapePanelHeight)
-            throw new TapePanelException();
+    public TapePanel(int width, int height, TapeEditController tapeEditController) {
+        this.tapeEditController = tapeEditController;
         this.height = height;
         this.width = width;
         initTapePanel();
     }
 
-    public TapePanel(int width, int height, boolean isVisible) throws TapePanelException {
-        if (width < ApplicationConstraints.minimalTapePanelWidth || height < ApplicationConstraints.minimalTapePanelHeight)
-            throw new TapePanelException();
-        this.width = width;
-        this.height = height;
-        if (isVisible)
-            initTapePanel();
+    public int getVisibleTapeSize() {
+        return tape.size();
     }
 
-    public void updateView() {
+    public void updateView(List<Symbol> symbols) throws TapeException {
+        if (symbols == null || symbols.size() != tape.size())
+            throw new TapeException("Improper data to fill");
 
+        for (int idx = 0; idx < tape.size(); idx++) {
+            final int i = idx;
+            SwingUtilities.invokeLater(() -> {
+                isMoving = true;
+                tape.get(i).setText(symbols.get(i).getValue());
+                isMoving = false;
+            });
+        }
+    }
+
+    public void updateView(int headDiff, Symbol symbol) throws TapeException {
+        if (symbol == null)
+            throw new TapeException("Improper data to fill");
+
+        SwingUtilities.invokeLater(() -> {
+            isMoving = true;
+            tape.get(tape.size() / 2 + headDiff).setText(symbol.getValue());
+            isMoving = false;
+        });
     }
 
     private void initTapePanel() {
@@ -78,7 +103,7 @@ public class TapePanel extends JPanel {
     }
 
     private void placeButtonsOnPanel() {
-        JTextField middleTextField = tape.get(tape.size()/2);
+        JTextField middleTextField = tape.get(tape.size() / 2);
 
         layout.putConstraint(HORIZONTAL_CENTER, head, 0, HORIZONTAL_CENTER, middleTextField);
         layout.putConstraint(NORTH, head, -10, NORTH, this);
@@ -86,13 +111,13 @@ public class TapePanel extends JPanel {
         layout.putConstraint(HORIZONTAL_CENTER, middleTextField, 0, HORIZONTAL_CENTER, this);
         layout.putConstraint(NORTH, middleTextField, 5, SOUTH, head);
 
-        for (int i=tape.size()/2-1; i >= 0; i--) {
-            layout.putConstraint(EAST, tape.get(i), -10, WEST, tape.get(i+1));
+        for (int i = tape.size() / 2 - 1; i >= 0; i--) {
+            layout.putConstraint(EAST, tape.get(i), -10, WEST, tape.get(i + 1));
             layout.putConstraint(BASELINE, tape.get(i), 0, BASELINE, middleTextField);
         }
 
-        for (int i=tape.size()/2+1; i < tape.size(); i++) {
-            layout.putConstraint(WEST, tape.get(i), 10, EAST, tape.get(i-1));
+        for (int i = tape.size() / 2 + 1; i < tape.size(); i++) {
+            layout.putConstraint(WEST, tape.get(i), 10, EAST, tape.get(i - 1));
             layout.putConstraint(BASELINE, tape.get(i), 0, BASELINE, middleTextField);
         }
 
@@ -101,7 +126,7 @@ public class TapePanel extends JPanel {
         layout.putConstraint(BASELINE, leftButton, 0, BASELINE, middleTextField);
 
         layout.putConstraint(EAST, rightButton, -10, EAST, this);
-        layout.putConstraint(WEST, rightButton, 10, EAST, tape.get(tape.size()-1));
+        layout.putConstraint(WEST, rightButton, 10, EAST, tape.get(tape.size() - 1));
         layout.putConstraint(BASELINE, rightButton, 0, BASELINE, middleTextField);
     }
 
@@ -118,16 +143,31 @@ public class TapePanel extends JPanel {
     }
 
     private void addListeners() {
-        //TODO:Implement
-    }
-}
+        int diffToHead = -(tape.size() / 2);
+        for (JTextField cell : tape) {
+            final int cellDiff = diffToHead;
+            cell.getDocument().addDocumentListener(new DocumentListener() {
+                @Override
+                public void insertUpdate(DocumentEvent e) {
+                    if (!isMoving)
+                        tapeEditController.changeSymbol(cellDiff, cell.getText());
+                }
 
-class TapePanelException extends Exception {
-    public TapePanelException() {
-        System.err.println("Minimal ControlPanel dimensions are: " + ApplicationConstraints.minimalTapePanelWidth + " x " + ApplicationConstraints.minimalTapePanelHeight);
-    }
+                @Override
+                public void removeUpdate(DocumentEvent e) {
+                    //do nothing
+                }
 
-    public TapePanelException(String s) {
-        System.err.println(s);
+                @Override
+                public void changedUpdate(DocumentEvent e) {
+                    if (!isMoving)
+                        tapeEditController.changeSymbol(cellDiff, cell.getText());
+                }
+            });
+            diffToHead++;
+        }
+
+        leftButton.addActionListener(a -> tapeEditController.moveRight());
+        rightButton.addActionListener(a -> tapeEditController.moveLeft());
     }
 }

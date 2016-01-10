@@ -41,6 +41,10 @@ public class ProgramTablePanel extends JPanel {
         createTablePanel();
     }
 
+    public TuringTable getTable() {
+        return table;
+    }
+
     private void createTablePanel() {
         createAndInitTableModel();
         initProgramPanelComponents();
@@ -48,7 +52,6 @@ public class ProgramTablePanel extends JPanel {
         setComponentsSettings();
         placeComponentsOnPanel();
         addComponentsToPanel();
-        updateControllers();
         addListeners();
     }
 
@@ -105,10 +108,6 @@ public class ProgramTablePanel extends JPanel {
         addRow.setPreferredSize(new Dimension(ApplicationConstraints.tablePanelButtonWidth, ApplicationConstraints.tablePanelButtonHeight));
         deleteRow.setPreferredSize(new Dimension(ApplicationConstraints.tablePanelButtonWidth, ApplicationConstraints.tablePanelButtonHeight));
         sp.setPreferredSize(new Dimension(ApplicationConstraints.tableMinimalWidth, ApplicationConstraints.tableMinimalHeight));
-    }
-
-    private void updateControllers() {
-        programEditController.setProgramTable(table);
     }
 
     private void addListeners() {

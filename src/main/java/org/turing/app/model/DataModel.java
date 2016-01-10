@@ -57,17 +57,23 @@ public class DataModel {
         return headSymbol;
     }
 
+    public Symbol read(int diffToHead) {
+        if (diffToHead > 0)
+            return rightTape.getAtDeep(diffToHead - 1);
+        else if (diffToHead < 0)
+            return leftTape.getAtDeep(-diffToHead - 1);
+        else
+            return headSymbol;
+    }
+
     public void write(Symbol symbol) {
         headSymbol = symbol;
     }
 
-    public void writeAt(Symbol symbol, int index) {
-        if (index == 0)
-            write(symbol);
-        else if (index > 0)
-            rightTape.replace(symbol, index - 1);
-        else
-            leftTape.replace(symbol, index - 1);
+    public void write(Symbol symbol, int diffToHead) {
+        adjustTapeModel(diffToHead);
+        write(symbol);
+        adjustTapeModel(-diffToHead);
     }
 
     public State getState() {
@@ -84,5 +90,14 @@ public class DataModel {
 
     public InfiniteSymbolStack getRightTape() {
         return rightTape;
+    }
+
+    private void adjustTapeModel(int diffToHead) {
+        if (diffToHead > 0)
+            while (diffToHead-- > 0)
+                moveRight();
+        else if (diffToHead < 0)
+            while (diffToHead++ < 0)
+                moveLeft();
     }
 }

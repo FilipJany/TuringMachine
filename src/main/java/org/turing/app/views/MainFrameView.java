@@ -46,6 +46,7 @@ public class MainFrameView {
 
         createFrameComponents();
         setFrameSettings();
+        updateControllers();
 
         Logger.log("Data frame initialized.");
     }
@@ -136,7 +137,7 @@ public class MainFrameView {
 
     private void createAndInitTapePanel()
     {
-        tapePanel = new TapePanel();
+        tapePanel = new TapePanel(tapeEditController);
 
         frame.add(tapePanel);
 
@@ -144,5 +145,10 @@ public class MainFrameView {
         layout.putConstraint(SOUTH, tapePanel, 10, NORTH, sliderPanel);
         layout.putConstraint(WEST, tapePanel, 10, WEST, frame.getContentPane());
         layout.putConstraint(EAST, tapePanel, -10, EAST, frame.getContentPane());
+    }
+
+    private void updateControllers() {
+        tapeEditController.setTapePanel(tapePanel);
+        tapeEditController.refreshTape();
     }
 }

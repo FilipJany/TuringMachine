@@ -13,6 +13,13 @@ public class InfiniteSymbolStack extends Stack<Symbol> {
         super();
     }
 
+    public synchronized Symbol getAtDeep(int deep) {
+        if (deep >= size())
+            return BLANK;
+
+        return get(size() - deep - 1);
+    }
+
     @Override
     public synchronized Symbol pop() {
         if (empty())
