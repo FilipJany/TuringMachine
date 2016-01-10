@@ -1,126 +1,129 @@
 package org.turing.app.views.panels;
 
+import org.turing.app.controllers.ExecutionController;
 import org.turing.app.views.constants.ApplicationConstraints;
+import org.turing.app.views.constants.ExecutionStatus;
 
 import javax.swing.*;
 import java.awt.*;
 
 import static javax.swing.SpringLayout.*;
+import static org.turing.app.views.constants.ExecutionStatus.STEP;
+
 
 /**
  * Created by FiFi on 2015-11-09.
  */
 //TODO:Implement state changing (online, paused, offline)
-public class ControlPanel extends JPanel
-{
+public class ControlPanel extends JPanel {
+    private final ExecutionController executionController;
+    private ExecutionStatus status;
+
     private int width, height;
-    private JButton playButton, forwardButton, backwardButton, resetButton;
-    private SpringLayout layout;
+    private JButton playButton, pauseButton, forwardButton, backwardButton, resetButton;
 
-    public ControlPanel()
-    {
-        width = ApplicationConstraints.minimalControlPanelWidth;
-        height = ApplicationConstraints.minimalControlPanelHeight;
-        initControlPanel();
+    public ControlPanel(ExecutionController executionController) {
+        this(executionController,
+                ApplicationConstraints.minimalControlPanelWidth,
+                ApplicationConstraints.minimalControlPanelHeight);
     }
 
-    public ControlPanel(int width, int height) throws ControlPanelException
-    {
-        if(width < ApplicationConstraints.minimalControlPanelHeight || height < ApplicationConstraints.minimalControlPanelWidth)
-            throw new ControlPanelException();
+    public ControlPanel(ExecutionController executionController, int width, int height) {
+        this.executionController = executionController;
         this.height = height;
         this.width = width;
+
         initControlPanel();
+        updateStatus(STEP);
     }
 
-    public ControlPanel(int width, int height, boolean isVisible) throws ControlPanelException
-    {
-        if(width < ApplicationConstraints.minimalControlPanelHeight || height < ApplicationConstraints.minimalControlPanelWidth)
-            throw new ControlPanelException();
-        this.width = width;
-        this.height = height;
-        if(isVisible)
-            initControlPanel();
+    public void updateStatus(ExecutionStatus status) {
+        this.status = status;
+
+        switch (status) {
+            case STEP:
+                forwardButton.setVisible(true);
+                playButton.setVisible(false);
+                pauseButton.setVisible(false);
+                break;
+            case CONTINUOUS_RUN:
+                forwardButton.setVisible(false);
+                playButton.setVisible(false);
+                pauseButton.setVisible(true);
+                break;
+            case CONTINUOUS_STOP:
+                forwardButton.setVisible(false);
+                playButton.setVisible(true);
+                pauseButton.setVisible(false);
+                break;
+        }
     }
 
-
-    private void initControlPanel()
-    {
+    private void initControlPanel() {
         createControlPanel();
         setPanelProperties();
-        addComponentToPanel();
+        addComponentsToPanel();
         placeButtonsOnPanel();
         setComponentsProperties();
         addListeners();
     }
 
-    private void createControlPanel()
-    {
-        layout = new SpringLayout();
+    private void createControlPanel() {
         //TODO:Replace with proper images
-        playButton = new JButton("|>");
-        forwardButton = new JButton(">>");
-        backwardButton = new JButton("<<");
+        playButton = new JButton("►");
+        pauseButton = new JButton("∎∎");
+        forwardButton = new JButton(">");
+        backwardButton = new JButton("<");
         resetButton = new JButton("C");
     }
 
-    private void setPanelProperties()
-    {
-        setLayout(layout);
+    private void setPanelProperties() {
         setSize(new Dimension(width, height));
         setPreferredSize(new Dimension(width, height));
     }
 
-    private void addComponentToPanel()
-    {
+    private void addComponentsToPanel() {
         add(playButton);
+        add(pauseButton);
         add(forwardButton);
         add(backwardButton);
         add(resetButton);
     }
 
-    private void placeButtonsOnPanel()
-    {
-        //Place forwardButton
+    private void placeButtonsOnPanel() {
+        SpringLayout layout = new SpringLayout();
+
+        resetButton.setPreferredSize(new Dimension(ApplicationConstraints.buttonWidth, ApplicationConstraints.buttonHeight));
+        layout.putConstraint(EAST, resetButton, -10, EAST, this);
+        layout.putConstraint(NORTH, resetButton, 5, NORTH, this);
+
         forwardButton.setPreferredSize(new Dimension(ApplicationConstraints.buttonWidth, ApplicationConstraints.buttonHeight));
-        layout.putConstraint(EAST, forwardButton, -10, EAST, this);
+        layout.putConstraint(EAST, forwardButton, -10, WEST, resetButton);
         layout.putConstraint(NORTH, forwardButton, 5, NORTH, this);
-        //Place backwardButton
+
+        playButton.setPreferredSize(new Dimension(ApplicationConstraints.buttonWidth, ApplicationConstraints.buttonHeight));
+        layout.putConstraint(EAST, playButton, -10, WEST, resetButton);
+        layout.putConstraint(NORTH, playButton, 5, NORTH, this);
+
+        pauseButton.setPreferredSize(new Dimension(ApplicationConstraints.buttonWidth, ApplicationConstraints.buttonHeight));
+        layout.putConstraint(EAST, pauseButton, -10, WEST, resetButton);
+        layout.putConstraint(NORTH, pauseButton, 5, NORTH, this);
+
         backwardButton.setPreferredSize(new Dimension(ApplicationConstraints.buttonWidth, ApplicationConstraints.buttonHeight));
         layout.putConstraint(EAST, backwardButton, -10, WEST, forwardButton);
         layout.putConstraint(NORTH, backwardButton, 5, NORTH, this);
-        //Place playButton
-        playButton.setPreferredSize(new Dimension(ApplicationConstraints.buttonWidth, ApplicationConstraints.buttonHeight));
-        layout.putConstraint(EAST, playButton, -10, WEST, backwardButton);
-        layout.putConstraint(NORTH, playButton, 5, NORTH, this);
-        //Place resetButton
-        resetButton.setPreferredSize(new Dimension(ApplicationConstraints.buttonWidth, ApplicationConstraints.buttonHeight));
-        layout.putConstraint(NORTH, resetButton, 5, SOUTH, backwardButton);
-        layout.putConstraint(WEST, resetButton, 0, WEST, backwardButton);
+
+        setLayout(layout);
     }
 
-    private void setComponentsProperties()
-    {
+    private void setComponentsProperties() {
         playButton.setMinimumSize(new Dimension(ApplicationConstraints.minimalButtonWidth, ApplicationConstraints.minimalButtonHeight));
         forwardButton.setMinimumSize(new Dimension(ApplicationConstraints.minimalButtonWidth, ApplicationConstraints.minimalButtonHeight));
         backwardButton.setMinimumSize(new Dimension(ApplicationConstraints.minimalButtonWidth, ApplicationConstraints.minimalButtonHeight));
         resetButton.setMinimumSize(new Dimension(ApplicationConstraints.minimalButtonWidth, ApplicationConstraints.minimalButtonHeight));
     }
 
-    private void addListeners()
-    {
+    private void addListeners() {
         //TODO:Implement
-    }
-}
-
-class ControlPanelException extends Exception
-{
-    public ControlPanelException()
-    {
-        System.err.println("Minimal ControlPanel dimensions are: " + ApplicationConstraints.minimalControlPanelWidth + " x " + ApplicationConstraints.minimalControlPanelHeight);
-    }
-    public ControlPanelException(String s)
-    {
-        System.err.println(s);
     }
 }

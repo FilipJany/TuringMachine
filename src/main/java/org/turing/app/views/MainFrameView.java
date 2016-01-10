@@ -92,7 +92,7 @@ public class MainFrameView {
     {
         try
         {
-            controlPanel = new ControlPanel();
+            controlPanel = new ControlPanel(executionController);
             controlPanel.setPreferredSize(new Dimension(ApplicationConstraints.minimalControlPanelWidth, ApplicationConstraints.minimalControlPanelHeight));
 
             frame.add(controlPanel);
