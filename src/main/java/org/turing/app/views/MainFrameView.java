@@ -127,7 +127,7 @@ public class MainFrameView {
 
     private void createAndInitStatusPanel()
     {
-        statePanel = new StatePanel();
+        statePanel = new StatePanel(executionController);
 
         frame.add(statePanel);
 
@@ -150,5 +150,8 @@ public class MainFrameView {
     private void updateControllers() {
         tapeEditController.setTapePanel(tapePanel);
         tapeEditController.refreshTape();
+        programEditController.setStatePanel(statePanel);
+        executionController.setStatePanel(statePanel);
+        executionController.refreshStatePanel();
     }
 }

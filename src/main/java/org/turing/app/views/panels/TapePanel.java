@@ -134,6 +134,7 @@ public class TapePanel extends JPanel {
         for (JTextField tf : tape)
             tf.setPreferredSize(new Dimension(ApplicationConstraints.textFieldWidth, ApplicationConstraints.textFieldHigh));
 
+
         head.setOpaque(true);
         head.setBackground(Color.BLACK);
         head.setPreferredSize(new Dimension(10, 30));

@@ -1,41 +1,113 @@
 package org.turing.app.views.panels;
 
+import org.turing.app.common.State;
+import org.turing.app.controllers.ExecutionController;
+import org.turing.app.views.elements.ActionTripleComboBox;
+
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.*;
+import java.util.List;
+
+import static javax.swing.SpringLayout.HORIZONTAL_CENTER;
+import static javax.swing.SpringLayout.VERTICAL_CENTER;
 
 /**
  * Created by FiFi on 2015-11-09.
  */
-public class StatePanel extends JPanel
-{
-    private JLabel stateLabel;
+public class StatePanel extends JPanel {
+    private final ExecutionController executionController;
 
-    public StatePanel()
-    {
+    private JLabel stateLabel;
+    private ActionTripleComboBox<State> stateCombobox;
+
+    public StatePanel(ExecutionController executionController) {
+        this.executionController = executionController;
         initStatePanel();
     }
 
-    public StatePanel(int width, int height) { initStatePanel(); }
+    public void updateState(State newState) {
+        stateLabel.setText(newState.getName());
+        stateCombobox.setSelectedItem(newState);
+    }
 
+    public void updateAvailableStates(List<State> availableStates) {
+        stateCombobox.removeAllItems();
+        for (State s : availableStates)
+            stateCombobox.addItem(s);
+    }
 
-    private void initStatePanel()
-    {
-        createStatePanel();
+    private void initStatePanel() {
+        createPanelComponents();
         setPanelProperties();
-        addComponentToPanel();
+        setComponentsProperties();
+        addComponentsToPanel();
+        putLayout();
+        addListeners();
     }
 
-    private void createStatePanel()
-    {
-        stateLabel = new JLabel("State");
+    private void createPanelComponents() {
+        stateLabel = new JLabel();
+        stateCombobox = new ActionTripleComboBox<>();
     }
 
-    private void setPanelProperties()
-    {
+    private void setPanelProperties() {
+        setPreferredSize(new Dimension(150, 70));
     }
 
-    private void addComponentToPanel()
-    {
+    private void setComponentsProperties() {
+        stateLabel.setFocusable(true);
+        stateLabel.setFont(new Font("Arial", Font.PLAIN, 20));
+        stateLabel.setVisible(true);
+
+        stateCombobox.setFont(new Font("Arial", Font.PLAIN, 18));
+        stateCombobox.setVisible(false);
+    }
+
+    private void addComponentsToPanel() {
         add(stateLabel);
+        add(stateCombobox);
+    }
+
+    private void putLayout() {
+        SpringLayout layout = new SpringLayout();
+
+        layout.putConstraint(HORIZONTAL_CENTER, stateLabel, 0, HORIZONTAL_CENTER, this);
+        layout.putConstraint(VERTICAL_CENTER, stateLabel, 0, VERTICAL_CENTER, this);
+
+        layout.putConstraint(HORIZONTAL_CENTER, stateCombobox, 0, HORIZONTAL_CENTER, this);
+        layout.putConstraint(VERTICAL_CENTER, stateCombobox, 0, VERTICAL_CENTER, this);
+
+        setLayout(layout);
+    }
+
+    public void addListeners() {
+        stateLabel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+                stateLabel.requestFocusInWindow();
+            }
+        });
+        stateLabel.addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                stateLabel.setVisible(false);
+                stateCombobox.setVisible(true);
+            }
+        });
+        stateCombobox.addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusLost(FocusEvent e) {
+                stateLabel.setVisible(true);
+                stateCombobox.setVisible(false);
+
+            }
+        });
+        stateCombobox.addItemListener(e -> {
+            if (e.getStateChange() == ItemEvent.SELECTED) {
+                executionController.updateState((State) stateCombobox.getSelectedItem());
+            }
+        });
     }
 }

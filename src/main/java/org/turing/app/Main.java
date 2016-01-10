@@ -21,7 +21,7 @@ public class Main {
         final ProgramModel programModel = new ProgramModel();
 
         final ProgramEditController programEditController = new ProgramEditController(programModel);
-        final ExecutionController executionController = new ExecutionController(dataModel);
+        final ExecutionController executionController = new ExecutionController(dataModel, programModel);
         final TapeEditController tapeEditController = new TapeEditController(dataModel, programModel);
         final ImportController importController = new ImportController(dataModel, programModel);
 
