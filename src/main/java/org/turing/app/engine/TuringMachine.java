@@ -95,6 +95,16 @@ public class TuringMachine implements ITuringMachine
             State newState = dataModel.getState();
             previousAction = programModel.getActionForStateAndSymbol(newState, newSymbol);
         }
+
+        ActionTriple newAction = programModel.getActionForStateAndSymbol(dataModel.getState(), dataModel.read());
+        dataModel.setState(newAction.getState());
+        dataModel.write(programModel.getActionForStateAndSymbol(newAction.getState(), newAction.getSymbol()).getSymbol());
+
+        //Continue with forward step
+        makeStep(newAction.getMoveDirection());
+
+        previousAction = newAction;
+
         //Change direction of move for 'back' action
         ActionTriple returnAction;
         if(previousAction.getMoveDirection() == MoveDirection.LEFT)
@@ -104,13 +114,6 @@ public class TuringMachine implements ITuringMachine
         else
             returnAction = new ActionTriple(previousAction.getState(), previousAction.getSymbol(), MoveDirection.NONE);
         previousActions.push(returnAction);
-
-        ActionTriple newAction = programModel.getActionForStateAndSymbol(dataModel.getState(), dataModel.read());
-        dataModel.setState(newAction.getState());
-        dataModel.write(programModel.getActionForStateAndSymbol(newAction.getState(), newAction.getSymbol()).getSymbol());
-
-        //Continue with forward step
-        makeStep(newAction.getMoveDirection());
     }
 
     @Override
@@ -120,9 +123,11 @@ public class TuringMachine implements ITuringMachine
         {
             previousAction = previousActions.pop();
             //Set back the state
-            dataModel.setState(previousAction.getState());
-            //Set proper symbol
             makeStep(previousAction.getMoveDirection());
+
+            dataModel.write(previousAction.getSymbol());
+            dataModel.setState(previousAction.getState());
+
         }
         else
             Logger.log(TuringEngineConstraints.PreviousSymbolStackEmpty);
