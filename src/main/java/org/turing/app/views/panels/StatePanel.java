@@ -11,6 +11,7 @@ import java.util.List;
 
 import static javax.swing.SpringLayout.HORIZONTAL_CENTER;
 import static javax.swing.SpringLayout.VERTICAL_CENTER;
+import static javax.swing.SpringLayout.WEST;
 
 /**
  * Created by FiFi on 2015-11-09.
@@ -72,10 +73,10 @@ public class StatePanel extends JPanel {
     private void putLayout() {
         SpringLayout layout = new SpringLayout();
 
-        layout.putConstraint(HORIZONTAL_CENTER, stateLabel, 0, HORIZONTAL_CENTER, this);
+        layout.putConstraint(WEST, stateLabel, 10, WEST, this);
         layout.putConstraint(VERTICAL_CENTER, stateLabel, 0, VERTICAL_CENTER, this);
 
-        layout.putConstraint(HORIZONTAL_CENTER, stateCombobox, 0, HORIZONTAL_CENTER, this);
+        layout.putConstraint(WEST, stateCombobox, 10, WEST, this);
         layout.putConstraint(VERTICAL_CENTER, stateCombobox, 0, VERTICAL_CENTER, this);
 
         setLayout(layout);

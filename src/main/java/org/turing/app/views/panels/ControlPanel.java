@@ -8,6 +8,7 @@ import javax.swing.*;
 import java.awt.*;
 
 import static javax.swing.SpringLayout.*;
+import static org.turing.app.views.constants.ExecutionStatus.CONTINUOUS_RUN;
 import static org.turing.app.views.constants.ExecutionStatus.STEP;
 
 
@@ -19,19 +20,10 @@ public class ControlPanel extends JPanel {
     private final ExecutionController executionController;
     private ExecutionStatus status;
 
-    private int width, height;
     private JButton playButton, pauseButton, forwardButton, backwardButton, resetButton;
 
     public ControlPanel(ExecutionController executionController) {
-        this(executionController,
-                ApplicationConstraints.minimalControlPanelWidth,
-                ApplicationConstraints.minimalControlPanelHeight);
-    }
-
-    public ControlPanel(ExecutionController executionController, int width, int height) {
         this.executionController = executionController;
-        this.height = height;
-        this.width = width;
 
         initControlPanel();
         updateStatus(STEP);
@@ -71,15 +63,14 @@ public class ControlPanel extends JPanel {
     private void createControlPanel() {
         //TODO:Replace with proper images
         playButton = new JButton("►");
-        pauseButton = new JButton("∎∎");
+        pauseButton = new JButton("<html><b>ll<b/></html>");
         forwardButton = new JButton(">");
         backwardButton = new JButton("<");
         resetButton = new JButton("C");
     }
 
     private void setPanelProperties() {
-        setSize(new Dimension(width, height));
-        setPreferredSize(new Dimension(width, height));
+        setPreferredSize(new Dimension(150, 70));
     }
 
     private void addComponentsToPanel() {
@@ -124,6 +115,8 @@ public class ControlPanel extends JPanel {
     }
 
     private void addListeners() {
-        //TODO:Implement
+        forwardButton.addActionListener(a -> executionController.stepForward());
+        backwardButton.addActionListener(a-> executionController.stepBackward());
+        resetButton.addActionListener(a -> executionController.clear());
     }
 }

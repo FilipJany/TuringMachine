@@ -70,7 +70,7 @@ public class MainFrameView {
 
         createAndInitControlPanel();
         createAndInitScrollPane();
-        createAndInitStatusPanel();
+        createAndInitStatePanel();
         createAndInitTapePanel();
         createAndInitMenuBar();
     }
@@ -125,7 +125,7 @@ public class MainFrameView {
         }
     }
 
-    private void createAndInitStatusPanel()
+    private void createAndInitStatePanel()
     {
         statePanel = new StatePanel(executionController);
 
@@ -133,6 +133,7 @@ public class MainFrameView {
 
         layout.putConstraint(NORTH, statePanel, 10, NORTH, frame.getContentPane());
         layout.putConstraint(WEST, statePanel, 10, WEST, frame.getContentPane());
+        layout.putConstraint(EAST, statePanel, -10, EAST, frame.getContentPane());
     }
 
     private void createAndInitTapePanel()
@@ -150,7 +151,11 @@ public class MainFrameView {
     private void updateControllers() {
         tapeEditController.setTapePanel(tapePanel);
         tapeEditController.refreshTape();
+
         programEditController.setStatePanel(statePanel);
+        programEditController.setTapePanel(tapePanel);
+
+        executionController.setTapePanel(tapePanel);
         executionController.setStatePanel(statePanel);
         executionController.refreshStatePanel();
     }

@@ -7,6 +7,7 @@ import org.turing.app.model.ActionTriple;
 import org.turing.app.model.ProgramModel;
 import org.turing.app.views.constants.ApplicationStrings;
 import org.turing.app.views.panels.StatePanel;
+import org.turing.app.views.panels.TapePanel;
 
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
@@ -23,6 +24,7 @@ public class ProgramEditController {
     private JFrame programFrame;
     private JTable programTable;
     private StatePanel statePanel;
+    private TapePanel tapePanel;
 
     public ProgramEditController(ProgramModel programModel) {
         this.programModel = programModel;
@@ -121,5 +123,9 @@ public class ProgramEditController {
 
     public void setStatePanel(StatePanel statePanel) {
         this.statePanel = statePanel;
+    }
+
+    public void setTapePanel(TapePanel tapePanel) {
+        this.tapePanel = tapePanel;
     }
 }

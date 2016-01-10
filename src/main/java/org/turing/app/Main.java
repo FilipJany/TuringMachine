@@ -20,15 +20,15 @@ public class Main {
         final DataModel dataModel = new DataModel();
         final ProgramModel programModel = new ProgramModel();
 
+        final TuringMachine engine = new TuringMachine(programModel, dataModel);
+
         final ProgramEditController programEditController = new ProgramEditController(programModel);
-        final ExecutionController executionController = new ExecutionController(dataModel, programModel);
+        final ExecutionController executionController = new ExecutionController(dataModel, programModel, engine);
         final TapeEditController tapeEditController = new TapeEditController(dataModel, programModel);
         final ImportController importController = new ImportController(dataModel, programModel);
 
         final ProgramFrameView mainFrameView = new ProgramFrameView(importController, programEditController);
         final MainFrameView programFrameView = new MainFrameView(executionController, tapeEditController, importController, programEditController);
-
-        final TuringMachine engine = new TuringMachine(programModel, dataModel);
 
         Application application = new Application(mainFrameView, programFrameView);
 
