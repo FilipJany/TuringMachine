@@ -70,14 +70,12 @@ public class ExecutionController {
     }
 
     public void stepForward() {
-        engine.startEngine();
         engine.stepForward();
         refreshStatePanel();
         refreshTape();
     }
 
     public void stepBackward() {
-        engine.startEngine();
         engine.stepBackward();
         refreshStatePanel();
         refreshTape();

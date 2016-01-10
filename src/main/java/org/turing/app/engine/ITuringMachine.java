@@ -11,7 +11,4 @@ public interface ITuringMachine {
 
     public void stepForward();
     public void stepBackward();
-    public ActionTriple getCurrentActionTriple();
-    public ActionTriple getLatestCompletedActionTriple();
-    public Stack<ActionTriple> getExecutionStack();
 }

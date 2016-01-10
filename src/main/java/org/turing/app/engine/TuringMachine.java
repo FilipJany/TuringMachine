@@ -23,35 +23,12 @@ public class TuringMachine implements ITuringMachine
 
     private boolean isOnline = false;
 
-    //Constructors Section (Engine needs to be started manually!!)
-    public TuringMachine()
-    {
-        previousActions = new Stack<>();
-    }
-
-
     public TuringMachine(ProgramModel programModel, DataModel dataModel)
     {
         previousActions = new Stack<>();
         this.programModel = programModel;
         this.dataModel = dataModel;
-    }
-
-    //Data & Program Model Setters (if they are added later)
-    public void setProgramModel(ProgramModel programModel)
-    {
-        if(programModel == null)
-            this.programModel = programModel;
-        else
-            Logger.log(TuringEngineConstraints.ProgramAlreadyLoaded);
-    }
-
-    public void setDataModel(DataModel dataModel)
-    {
-        if(dataModel == null)
-            this.dataModel = dataModel;
-        else
-            Logger.log(TuringEngineConstraints.DataAlreadyLoaded);
+        startEngine();
     }
 
     //Check Section - checks if everything is prepared to run engine
@@ -88,10 +65,6 @@ public class TuringMachine implements ITuringMachine
             {
                 Logger.log(e.getMessage());
             }
-            //If everything is okay, load starting data to engine
-            Symbol newSymbol = dataModel.read();
-            State newState = dataModel.getState();
-            previousAction = programModel.getActionForStateAndSymbol(newState, newSymbol);
         }
         isOnline = true;
     }
@@ -116,6 +89,12 @@ public class TuringMachine implements ITuringMachine
     @Override
     public void stepForward()
     {
+        if(previousAction == null)
+        {
+            Symbol newSymbol = dataModel.read();
+            State newState = dataModel.getState();
+            previousAction = programModel.getActionForStateAndSymbol(newState, newSymbol);
+        }
         //Change direction of move for 'back' action
         ActionTriple returnAction;
         if(previousAction.getMoveDirection() == MoveDirection.LEFT)
@@ -126,17 +105,12 @@ public class TuringMachine implements ITuringMachine
             returnAction = new ActionTriple(previousAction.getState(), previousAction.getSymbol(), MoveDirection.NONE);
         previousActions.push(returnAction);
 
-        //Continue with forward step
-        makeStep(previousAction.getMoveDirection());
+        ActionTriple newAction = programModel.getActionForStateAndSymbol(dataModel.getState(), dataModel.read());
+        dataModel.setState(newAction.getState());
+        dataModel.write(programModel.getActionForStateAndSymbol(newAction.getState(), newAction.getSymbol()).getSymbol());
 
-        try
-        {
-            getNextTripleAndReplaceOldOne();
-        }
-        catch (Exception e)
-        {
-            Logger.log(e.getMessage());
-        }
+        //Continue with forward step
+        makeStep(newAction.getMoveDirection());
     }
 
     @Override
@@ -172,31 +146,10 @@ public class TuringMachine implements ITuringMachine
 
     private void getNextTripleAndReplaceOldOne() throws EngineException
     {
-        Symbol newSymbol = dataModel.read();
-        State newState = dataModel.getState();
-        ActionTriple newActionTriple = programModel.getActionForStateAndSymbol(newState, newSymbol);
+        ActionTriple newActionTriple = programModel.getActionForStateAndSymbol(dataModel.getState(), dataModel.read());
         if(newActionTriple == null)
             throw new EngineException(TuringEngineConstraints.NoActionForStateAndSymbolFound);
         previousAction = newActionTriple;
-    }
-
-    //Rest of interface methods
-    @Override
-    public ActionTriple getCurrentActionTriple()
-    {
-        return previousAction;
-    }
-
-    @Override
-    public ActionTriple getLatestCompletedActionTriple()
-    {
-        return previousActions.get(0);
-    }
-
-    @Override
-    public Stack<ActionTriple> getExecutionStack()
-    {
-        return previousActions;
     }
 }
 
