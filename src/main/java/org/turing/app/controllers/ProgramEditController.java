@@ -9,7 +9,6 @@ import org.turing.app.model.ProgramModel;
 import org.turing.app.views.constants.ApplicationStrings;
 import org.turing.app.views.panels.StatePanel;
 import org.turing.app.views.panels.TapePanel;
-import sun.jvm.hotspot.debugger.cdbg.Sym;
 
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
