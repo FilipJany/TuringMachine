@@ -89,31 +89,24 @@ public class TuringMachine implements ITuringMachine
     @Override
     public void stepForward()
     {
-        if(previousAction == null)
-        {
-            Symbol newSymbol = dataModel.read();
-            State newState = dataModel.getState();
-            previousAction = programModel.getActionForStateAndSymbol(newState, newSymbol);
-        }
-
         ActionTriple newAction = programModel.getActionForStateAndSymbol(dataModel.getState(), dataModel.read());
-        dataModel.setState(newAction.getState());
-        dataModel.write(newAction.getSymbol());
-
-        //Continue with forward step
-        makeStep(newAction.getMoveDirection());
-
-        previousAction = newAction;
 
         //Change direction of move for 'back' action
         ActionTriple returnAction;
-        if(previousAction.getMoveDirection() == MoveDirection.LEFT)
-            returnAction = new ActionTriple(previousAction.getState(), previousAction.getSymbol(), MoveDirection.RIGHT);
-        else if(previousAction.getMoveDirection() == MoveDirection.RIGHT)
-            returnAction = new ActionTriple(previousAction.getState(), previousAction.getSymbol(), MoveDirection.LEFT);
+        if(newAction.getMoveDirection() == MoveDirection.LEFT)
+            returnAction = new ActionTriple(dataModel.getState(), dataModel.read(), MoveDirection.RIGHT);
+        else if(newAction.getMoveDirection() == MoveDirection.RIGHT)
+            returnAction = new ActionTriple(dataModel.getState(), dataModel.read(), MoveDirection.LEFT);
         else
-            returnAction = new ActionTriple(previousAction.getState(), previousAction.getSymbol(), MoveDirection.NONE);
+            returnAction = new ActionTriple(dataModel.getState(), dataModel.read(), MoveDirection.NONE);
         previousActions.push(returnAction);
+
+        //Continue with forward step
+
+        dataModel.setState(newAction.getState());
+        dataModel.write(newAction.getSymbol());
+
+        makeStep(newAction.getMoveDirection());
     }
 
     @Override

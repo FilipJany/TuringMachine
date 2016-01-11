@@ -22,7 +22,7 @@ public class Main {
 
         final TuringMachine engine = new TuringMachine(programModel, dataModel);
 
-        final ProgramEditController programEditController = new ProgramEditController(programModel);
+        final ProgramEditController programEditController = new ProgramEditController(programModel, dataModel);
         final ExecutionController executionController = new ExecutionController(dataModel, programModel, engine);
         final TapeEditController tapeEditController = new TapeEditController(dataModel, programModel);
         final ImportController importController = new ImportController(dataModel, programModel);
