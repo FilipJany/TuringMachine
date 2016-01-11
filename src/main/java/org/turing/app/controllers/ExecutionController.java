@@ -71,13 +71,13 @@ public class ExecutionController {
 
     public void stepForward() {
         engine.stepForward();
-        refreshStatePanel();
+        statePanel.updateState(dataModel.getState());
         refreshTape();
     }
 
     public void stepBackward() {
         engine.stepBackward();
-        refreshStatePanel();
+        statePanel.updateState(dataModel.getState());
         refreshTape();
     }
 
