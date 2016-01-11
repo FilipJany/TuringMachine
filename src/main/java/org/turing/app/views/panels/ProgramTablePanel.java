@@ -8,6 +8,7 @@ import org.turing.app.model.ActionTriple;
 import org.turing.app.model.ProgramModel;
 import org.turing.app.views.constants.ApplicationConstraints;
 import org.turing.app.views.elements.ActionTripleComboBox;
+import org.turing.support.Logger;
 
 import javax.swing.*;
 import javax.swing.event.CellEditorListener;

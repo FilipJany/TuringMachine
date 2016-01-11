@@ -4,6 +4,7 @@ import com.google.common.collect.*;
 import org.turing.app.common.MoveDirection;
 import org.turing.app.common.State;
 import org.turing.app.common.Symbol;
+import org.turing.support.Logger;
 
 import java.util.List;
 
@@ -47,6 +48,11 @@ public class ProgramModel {
         verifyLegality(actionTriple.getSymbol());
 
         transitionTable.put(state, symbol, actionTriple);
+
+//        Logger.warning("Transition Table:");
+//        for (State st : legalStates)
+//            for (Symbol sy: legalSymbols)
+//                Logger.warning("[" + st.getName() + "," + sy.getValue() + "] " + transitionTable.get(st, sy));
     }
 
     public State getStateAt(int index) {

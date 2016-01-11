@@ -98,7 +98,7 @@ public class TuringMachine implements ITuringMachine
 
         ActionTriple newAction = programModel.getActionForStateAndSymbol(dataModel.getState(), dataModel.read());
         dataModel.setState(newAction.getState());
-        dataModel.write(programModel.getActionForStateAndSymbol(newAction.getState(), newAction.getSymbol()).getSymbol());
+        dataModel.write(newAction.getSymbol());
 
         //Continue with forward step
         makeStep(newAction.getMoveDirection());
