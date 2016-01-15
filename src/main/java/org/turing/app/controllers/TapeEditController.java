@@ -27,7 +27,7 @@ public class TapeEditController {
         this.tapePanel = tapePanel;
     }
 
-    public void refreshTape() {
+    public void refreshTapePanel() {
         int visibleSize = tapePanel.getVisibleTapeSize();
         ArrayList<Symbol> view = new ArrayList<>(visibleSize);
 
@@ -62,12 +62,12 @@ public class TapeEditController {
 
     public void moveRight() {
         dataModel.moveRight();
-        refreshTape();
+        refreshTapePanel();
     }
 
     public void moveLeft() {
         dataModel.moveLeft();
-        refreshTape();
+        refreshTapePanel();
     }
 
     public void changeSymbol(String value) {

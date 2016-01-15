@@ -6,6 +6,7 @@ import org.turing.app.controllers.ProgramEditController;
 import org.turing.app.controllers.TapeEditController;
 import org.turing.app.engine.TuringMachine;
 import org.turing.app.model.DataModel;
+import org.turing.app.model.ExecutionModel;
 import org.turing.app.model.ProgramModel;
 import org.turing.app.views.MainFrameView;
 import org.turing.app.views.ProgramFrameView;
@@ -19,11 +20,12 @@ public class Main {
     private static Application createApplication() {
         final DataModel dataModel = new DataModel();
         final ProgramModel programModel = new ProgramModel();
+        final ExecutionModel executionModel = new ExecutionModel();
 
         final TuringMachine engine = new TuringMachine(programModel, dataModel);
 
         final ProgramEditController programEditController = new ProgramEditController(programModel, dataModel);
-        final ExecutionController executionController = new ExecutionController(dataModel, programModel, engine);
+        final ExecutionController executionController = new ExecutionController(dataModel, programModel, executionModel, engine);
         final TapeEditController tapeEditController = new TapeEditController(dataModel, programModel);
         final ImportController importController = new ImportController(dataModel, programModel);
 

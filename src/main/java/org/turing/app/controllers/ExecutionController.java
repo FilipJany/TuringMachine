@@ -5,7 +5,11 @@ import org.turing.app.common.Symbol;
 import org.turing.app.engine.TuringMachine;
 import org.turing.app.exceptions.TapeException;
 import org.turing.app.model.DataModel;
+import org.turing.app.model.ExecutionModel;
 import org.turing.app.model.ProgramModel;
+import org.turing.app.views.constants.ExecutionStatus;
+import org.turing.app.views.panels.ControlPanel;
+import org.turing.app.views.panels.SliderPanel;
 import org.turing.app.views.panels.StatePanel;
 import org.turing.app.views.panels.TapePanel;
 import org.turing.support.Logger;
@@ -15,21 +19,34 @@ import java.util.ArrayList;
 public class ExecutionController {
     private final ProgramModel programModel;
     private final DataModel dataModel;
+    private final ExecutionModel executionModel;
 
     private final TuringMachine engine;
 
+    private ControlPanel controlPanel;
     private StatePanel statePanel;
     private TapePanel tapePanel;
+    private SliderPanel sliderPanel;
 
-    public ExecutionController(DataModel dataModel, ProgramModel programModel, TuringMachine engine) {
+    public ExecutionController(DataModel dataModel, ProgramModel programModel, ExecutionModel executionModel, TuringMachine engine) {
         this.dataModel = dataModel;
         this.programModel = programModel;
+        this.executionModel = executionModel;
         this.engine = engine;
     }
 
     public void clear() {
+        pause();
+
         dataModel.clear();
         engine.restartEngine();
+
+        refreshTapePanel();
+        refreshStatePanel();
+    }
+
+    public void refreshControlPanel() {
+        controlPanel.updateStatus(executionModel.getExecutionStatus());
     }
 
     public void refreshStatePanel() {
@@ -37,7 +54,7 @@ public class ExecutionController {
         statePanel.updateState(dataModel.getState());
     }
 
-    public void refreshTape() {
+    public void refreshTapePanel() {
         int visibleSize = tapePanel.getVisibleTapeSize();
         ArrayList<Symbol> view = new ArrayList<>(visibleSize);
 
@@ -54,6 +71,22 @@ public class ExecutionController {
         } catch (TapeException e) {
             Logger.error(e);
         }
+    }
+    public void refreshSliderPanel() {
+        int delay = executionModel.getExecutionDelay();
+        sliderPanel.updateView(delay, delay == ExecutionModel.MAX_DELAY ? "Step by step mode" : "Delay between moves: " + delay + " s");
+    }
+
+    public void updateStepDelay(int delay) {
+        executionModel.setExecutionDelay(delay);
+
+        if (delay == ExecutionModel.MAX_DELAY)
+            executionModel.setExecutionStatus(ExecutionStatus.STEP);
+        else if (executionModel.getExecutionStatus() == ExecutionStatus.STEP)
+            executionModel.setExecutionStatus(ExecutionStatus.CONTINUOUS_STOP);
+
+        refreshControlPanel();
+        refreshSliderPanel();
     }
 
     public void updateState(State state) {
@@ -72,13 +105,25 @@ public class ExecutionController {
     public void stepForward() {
         engine.stepForward();
         statePanel.updateState(dataModel.getState());
-        refreshTape();
+        refreshTapePanel();
     }
 
     public void stepBackward() {
         engine.stepBackward();
         statePanel.updateState(dataModel.getState());
-        refreshTape();
+        refreshTapePanel();
+    }
+
+    public void play() {
+        //TODO
+    }
+
+    public void pause() {
+        //TODO
+    }
+
+    public void setControlPanel(ControlPanel controlPanel) {
+        this.controlPanel = controlPanel;
     }
 
     public void setStatePanel(StatePanel statePanel) {
@@ -89,4 +134,7 @@ public class ExecutionController {
         this.tapePanel = tapePanel;
     }
 
+    public void setSliderPanel(SliderPanel sliderPanel) {
+        this.sliderPanel = sliderPanel;
+    }
 }

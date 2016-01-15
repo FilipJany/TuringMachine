@@ -1,5 +1,7 @@
 package org.turing.app.views.constants;
 
+import org.turing.app.model.ExecutionModel;
+
 /**
  * Created by fifi on 15.11.2015.
  */
@@ -11,8 +13,8 @@ public  class ApplicationConstraints
     //ControlPanel
     public final static int minimalControlPanelWidth = 350, minimalControlPanelHeight = 80, buttonHeight = 30, buttonWidth = 80, minimalButtonHeight = 20, minimalButtonWidth = 50;
     //SliderPanel
-    public final static int sliderMinValue = 0, sliderInitValue = 10, sliderMaxValue = 20, sliderStep = 1;
-    public static int sliderPanelMinimalWidth = 350, sliderPanelMinimalHeight = 100;
+    public final static int sliderMinValue = ExecutionModel.MIN_DELAY, sliderInitValue = ExecutionModel.MAX_DELAY /2, sliderMaxValue = ExecutionModel.MAX_DELAY, sliderStep = 5, sliderSteppie = 1;
+    public static int sliderPanelMinimalWidth = 350, sliderPanelMinimalHeight = 80;
     public static String sliderSpeedLabelPrefix = "Current speed multiplier: x";
     //Tape Panel
     public final static int minimalTapePanelWidth = 500, minimalTapePanelHeight = 200, textFieldHigh = 30, textFieldWidth = 30;

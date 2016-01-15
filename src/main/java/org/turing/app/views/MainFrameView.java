@@ -110,7 +110,7 @@ public class MainFrameView {
     {
         try
         {
-            sliderPanel = new SliderPanel();
+            sliderPanel = new SliderPanel(executionController);
             sliderPanel.setPreferredSize(new Dimension(ApplicationConstraints.sliderPanelMinimalWidth, ApplicationConstraints.sliderPanelMinimalHeight));
 
             frame.add(sliderPanel);
@@ -150,13 +150,17 @@ public class MainFrameView {
 
     private void updateControllers() {
         tapeEditController.setTapePanel(tapePanel);
-        tapeEditController.refreshTape();
+        tapeEditController.refreshTapePanel();
 
         programEditController.setStatePanel(statePanel);
         programEditController.setTapePanel(tapePanel);
 
+        executionController.setControlPanel(controlPanel);
         executionController.setTapePanel(tapePanel);
         executionController.setStatePanel(statePanel);
+        executionController.setSliderPanel(sliderPanel);
+        executionController.refreshControlPanel();
         executionController.refreshStatePanel();
+        executionController.refreshSliderPanel();
     }
 }

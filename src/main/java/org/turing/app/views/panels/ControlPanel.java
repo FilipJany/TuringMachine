@@ -18,7 +18,6 @@ import static org.turing.app.views.constants.ExecutionStatus.STEP;
 //TODO:Implement state changing (online, paused, offline)
 public class ControlPanel extends JPanel {
     private final ExecutionController executionController;
-    private ExecutionStatus status;
 
     private JButton playButton, pauseButton, forwardButton, backwardButton, resetButton;
 
@@ -30,8 +29,6 @@ public class ControlPanel extends JPanel {
     }
 
     public void updateStatus(ExecutionStatus status) {
-        this.status = status;
-
         switch (status) {
             case STEP:
                 forwardButton.setVisible(true);
@@ -116,6 +113,8 @@ public class ControlPanel extends JPanel {
     }
 
     private void addListeners() {
+        playButton.addActionListener(a -> executionController.play());
+        pauseButton.addActionListener(a -> executionController.pause());
         forwardButton.addActionListener(a -> executionController.stepForward());
         backwardButton.addActionListener(a-> executionController.stepBackward());
         resetButton.addActionListener(a -> executionController.clear());

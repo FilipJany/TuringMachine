@@ -1,5 +1,6 @@
 package org.turing.app.views.panels;
 
+import org.turing.app.controllers.ExecutionController;
 import org.turing.app.views.constants.ApplicationConstraints;
 
 import javax.swing.*;
@@ -9,26 +10,24 @@ import static javax.swing.SpringLayout.*;
 /**
  * Created by FiFi on 2015-11-09.
  */
-public class SliderPanel extends JPanel
-{
+public class SliderPanel extends JPanel {
+    private final ExecutionController executionController;
+
     private JSlider slider;
-    private SpringLayout layout;
     private JLabel speedLabel;
 
-    public SliderPanel()
-    {
+    public SliderPanel(ExecutionController executionController) {
+        this.executionController = executionController;
         initSliderPanel();
     }
 
-    public SliderPanel(int width, int height) throws SliderPanelException
-    {
-        if(width < ApplicationConstraints.sliderPanelMinimalWidth || height < ApplicationConstraints.sliderPanelMinimalHeight)
-            throw new SliderPanelException();
-        initSliderPanel();
+    public void updateView(int value, String text) {
+        slider.setValue(value);
+        speedLabel.setText(text);
     }
 
-    private void initSliderPanel()
-    {
+
+    private void initSliderPanel() {
         createSliderPanelComponents();
         setSliderPanelProperties();
         addComponentsToPanel();
@@ -36,55 +35,44 @@ public class SliderPanel extends JPanel
         setListeners();
     }
 
-    private void createSliderPanelComponents()
-    {
-        layout = new SpringLayout();
+    private void createSliderPanelComponents() {
         slider = new JSlider(JSlider.HORIZONTAL);
-        speedLabel = new JLabel(ApplicationConstraints.sliderSpeedLabelPrefix + ApplicationConstraints.sliderInitValue/10);
+        speedLabel = new JLabel(ApplicationConstraints.sliderSpeedLabelPrefix);
     }
 
-    private void setSliderPanelProperties()
-    {
-        setLayout(layout);
+    private void setSliderPanelProperties() {
         slider.setMinimum(ApplicationConstraints.sliderMinValue);
         slider.setMaximum(ApplicationConstraints.sliderMaxValue);
         slider.setValue(ApplicationConstraints.sliderInitValue);
-        slider.setMinorTickSpacing(ApplicationConstraints.sliderStep);
+        slider.setMajorTickSpacing(ApplicationConstraints.sliderStep);
+        slider.setMinorTickSpacing(ApplicationConstraints.sliderSteppie);
         slider.setPaintTicks(true);
+        slider.setInverted(true);
+        slider.setSnapToTicks(true);
     }
 
-    private void addComponentsToPanel()
-    {
+    private void addComponentsToPanel() {
         add(speedLabel);
         add(slider);
     }
 
-    private void placeSliderPanelComponentsOnPanel()
-    {
-        //Place label
-        layout.putConstraint(EAST, speedLabel, -5, EAST, this);
+    private void placeSliderPanelComponentsOnPanel() {
+        SpringLayout layout = new SpringLayout();
+
+        layout.putConstraint(WEST, speedLabel, -190, EAST, this);
         layout.putConstraint(NORTH, speedLabel, 5, NORTH, this);
-        //Place slider
+
         layout.putConstraint(WEST, slider, 5, WEST, this);
         layout.putConstraint(NORTH, slider, 5, SOUTH, speedLabel);
         layout.putConstraint(EAST, slider, -5, EAST, this);
         layout.putConstraint(SOUTH, slider, -5, SOUTH, this);
+
+        setLayout(layout);
     }
 
-    private void setListeners()
-    {
-        slider.addChangeListener(e -> speedLabel.setText(ApplicationConstraints.sliderSpeedLabelPrefix + String.valueOf(slider.getValue()/10.0))); //nie bijce mnie za ta lambde :P uwielbiam je wciskac w C# :P
-    }
-}
-
-class SliderPanelException extends Exception
-{
-    public SliderPanelException()
-    {
-        System.err.println("Minimal SliderPanel dimensions are: " + ApplicationConstraints.sliderPanelMinimalWidth + " x " + ApplicationConstraints.sliderPanelMinimalHeight);
-    }
-    public SliderPanelException(String s)
-    {
-        System.err.println(s);
+    private void setListeners() {
+        slider.addChangeListener(c -> executionController.updateStepDelay(slider.getValue()));
+        //nie bijce mnie za ta lambde :P uwielbiam je wciskac w C# :P
+        //easy, nie jesteś sam Fifi :P
     }
 }
