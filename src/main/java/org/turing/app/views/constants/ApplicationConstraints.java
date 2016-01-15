@@ -23,7 +23,7 @@ public  class ApplicationConstraints
     public final static int programFrameMinimalWidth = 600, programFrameMinimalHeight = 300;
     public final static int programFrameStartLocationX = 810, programFrameStartLocationY = 30;
     //TablePanel
-    public final static int tablePanelButtonHeight = 15, tablePanelButtonWidth = 15;
+    public final static int tablePanelButtonHeight = 18, tablePanelButtonWidth = 18;
     public final static int tableMinimalHeight = 300, tableMinimalWidth = 500;
     public final static int columnWidth = 80, selectedColumnWidth = 250;
 }

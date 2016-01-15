@@ -26,7 +26,7 @@ public class Main {
 
         final ProgramEditController programEditController = new ProgramEditController(programModel, dataModel);
         final ExecutionController executionController = new ExecutionController(dataModel, programModel, executionModel, engine);
-        final TapeEditController tapeEditController = new TapeEditController(dataModel, programModel);
+        final TapeEditController tapeEditController = new TapeEditController(dataModel, programModel, executionController);
         final ImportController importController = new ImportController(dataModel, programModel);
 
         final ProgramFrameView mainFrameView = new ProgramFrameView(importController, programEditController);

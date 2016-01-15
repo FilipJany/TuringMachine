@@ -4,6 +4,7 @@ import org.turing.app.common.Symbol;
 import org.turing.app.controllers.TapeEditController;
 import org.turing.app.exceptions.TapeException;
 import org.turing.app.views.constants.ApplicationConstraints;
+import org.turing.support.Logger;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -26,7 +27,7 @@ public class TapePanel extends JPanel {
     private JLabel head;
     private SpringLayout layout;
 
-    private boolean isMoving;
+    private boolean interiorModification;
 
     public TapePanel(TapeEditController tapeEditController) {
         this(ApplicationConstraints.minimalTapePanelWidth,
@@ -52,9 +53,9 @@ public class TapePanel extends JPanel {
         for (int idx = 0; idx < tape.size(); idx++) {
             final int i = idx;
             SwingUtilities.invokeLater(() -> {
-                isMoving = true;
+                interiorModification = true;
                 tape.get(i).setText(symbols.get(i).getValue());
-                isMoving = false;
+                interiorModification = false;
             });
         }
     }
@@ -64,9 +65,9 @@ public class TapePanel extends JPanel {
             throw new TapeException("Improper data to fill");
 
         SwingUtilities.invokeLater(() -> {
-            isMoving = true;
+            interiorModification = true;
             tape.get(tape.size() / 2 + headDiff).setText(symbol.getValue());
-            isMoving = false;
+            interiorModification = false;
         });
     }
 
@@ -150,7 +151,7 @@ public class TapePanel extends JPanel {
             cell.getDocument().addDocumentListener(new DocumentListener() {
                 @Override
                 public void insertUpdate(DocumentEvent e) {
-                    if (!isMoving)
+                    if (!interiorModification)
                         tapeEditController.changeSymbol(cellDiff, cell.getText());
                 }
 
@@ -161,7 +162,7 @@ public class TapePanel extends JPanel {
 
                 @Override
                 public void changedUpdate(DocumentEvent e) {
-                    if (!isMoving)
+                    if (!interiorModification)
                         tapeEditController.changeSymbol(cellDiff, cell.getText());
                 }
             });

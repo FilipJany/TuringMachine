@@ -1,5 +1,6 @@
 package org.turing.app.controllers;
 
+
 import org.turing.app.common.State;
 import org.turing.app.common.Symbol;
 import org.turing.app.engine.TuringMachine;
@@ -14,7 +15,11 @@ import org.turing.app.views.panels.StatePanel;
 import org.turing.app.views.panels.TapePanel;
 import org.turing.support.Logger;
 
+import javax.swing.*;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+
+import static org.turing.app.common.HaltState.*;
 
 public class ExecutionController {
     private final ProgramModel programModel;
@@ -35,15 +40,6 @@ public class ExecutionController {
         this.engine = engine;
     }
 
-    public void clear() {
-        pause();
-
-        dataModel.clear();
-        engine.restartEngine();
-
-        refreshTapePanel();
-        refreshStatePanel();
-    }
 
     public void refreshControlPanel() {
         controlPanel.updateStatus(executionModel.getExecutionStatus());
@@ -72,24 +68,26 @@ public class ExecutionController {
             Logger.error(e);
         }
     }
+
     public void refreshSliderPanel() {
         int delay = executionModel.getExecutionDelay();
         sliderPanel.updateView(delay, delay == ExecutionModel.MAX_DELAY ? "Step by step mode" : "Delay between moves: " + delay + " s");
     }
 
-    public void updateStepDelay(int delay) {
+    public synchronized void updateStepDelay(int delay) {
         executionModel.setExecutionDelay(delay);
 
-        if (delay == ExecutionModel.MAX_DELAY)
+        if (delay == ExecutionModel.MAX_DELAY) {
             executionModel.setExecutionStatus(ExecutionStatus.STEP);
-        else if (executionModel.getExecutionStatus() == ExecutionStatus.STEP)
+            this.notify();
+        } else if (executionModel.getExecutionStatus() == ExecutionStatus.STEP)
             executionModel.setExecutionStatus(ExecutionStatus.CONTINUOUS_STOP);
 
         refreshControlPanel();
         refreshSliderPanel();
     }
 
-    public void updateState(State state) {
+    public synchronized void updateState(State state) {
         if (state == null) {
             Logger.error("State is null.");
             return;
@@ -102,24 +100,66 @@ public class ExecutionController {
             Logger.error("Improper state: " + state.getName() + ".");
     }
 
-    public void stepForward() {
+    public void clear() {
+        pause();
+
+        dataModel.clear();
+        engine.restartEngine();
+
+        refreshTapePanel();
+        refreshStatePanel();
+    }
+
+    public synchronized void stepForward() {
         engine.stepForward();
         statePanel.updateState(dataModel.getState());
         refreshTapePanel();
     }
 
-    public void stepBackward() {
+    public synchronized void stepBackward() {
+        pause();
+
         engine.stepBackward();
         statePanel.updateState(dataModel.getState());
         refreshTapePanel();
     }
 
     public void play() {
-        //TODO
+        executionModel.setExecutionStatus(ExecutionStatus.CONTINUOUS_RUN);
+        refreshControlPanel();
+
+        new Thread(() -> {
+            while (dataModel.getState() != HALT && executionModel.getExecutionStatus() == ExecutionStatus.CONTINUOUS_RUN) {
+                synchronized (this) {
+                    try {
+                        engine.stepForward();
+                        SwingUtilities.invokeAndWait(() -> {
+                            statePanel.updateState(dataModel.getState());
+                            refreshTapePanel();
+                        });
+
+                        if(executionModel.getExecutionDelay() != 0)
+                            this.wait(executionModel.getExecutionDelay() * 1000);
+                        else
+                            this.wait(100);
+                    } catch (InterruptedException e) {
+                        Logger.warning("Executing thread interrupted: " + e);
+                    } catch (InvocationTargetException e) {
+                        Logger.error("Exception from SWING during execution: " + e);
+                    }
+                }
+            }
+            if (dataModel.getState() == HALT)
+                pause();
+        }).start();
     }
 
-    public void pause() {
-        //TODO
+    public synchronized void pause() {
+        if (executionModel.getExecutionStatus() == ExecutionStatus.CONTINUOUS_RUN) {
+            executionModel.setExecutionStatus(ExecutionStatus.CONTINUOUS_STOP);
+            this.notify();
+            refreshControlPanel();
+        }
     }
 
     public void setControlPanel(ControlPanel controlPanel) {

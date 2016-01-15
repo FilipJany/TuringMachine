@@ -22,20 +22,30 @@ public class StatePanel extends JPanel {
     private JLabel stateLabel;
     private ActionTripleComboBox<State> stateCombobox;
 
+    private boolean interiorModification;
+
     public StatePanel(ExecutionController executionController) {
         this.executionController = executionController;
         initStatePanel();
     }
 
     public void updateState(State newState) {
+        interiorModification = true;
+
         stateLabel.setText(newState.getName());
         stateCombobox.setSelectedItem(newState);
+
+        interiorModification = false;
     }
 
     public void updateAvailableStates(List<State> availableStates) {
+        interiorModification = true;
+
         stateCombobox.removeAllItems();
         for (State s : availableStates)
             stateCombobox.addItem(s);
+
+        interiorModification = false;
     }
 
     private void initStatePanel() {
@@ -106,7 +116,7 @@ public class StatePanel extends JPanel {
             }
         });
         stateCombobox.addItemListener(e -> {
-            if (e.getStateChange() == ItemEvent.SELECTED) {
+            if (!interiorModification && e.getStateChange() == ItemEvent.SELECTED) {
                 executionController.updateState((State) stateCombobox.getSelectedItem());
             }
         });

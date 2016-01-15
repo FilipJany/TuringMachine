@@ -14,13 +14,16 @@ import static org.turing.app.common.BlankSymbol.BLANK;
 
 public class TapeEditController {
 
+    private final Object editLock;
+
     private final DataModel dataModel;
     private final ProgramModel programModel;
     private TapePanel tapePanel;
 
-    public TapeEditController(DataModel dataModel, ProgramModel programModel) {
+    public TapeEditController(DataModel dataModel, ProgramModel programModel, Object editLock) {
         this.dataModel = dataModel;
         this.programModel = programModel;
+        this.editLock = editLock;
     }
 
     public void setTapePanel(TapePanel tapePanel) {
@@ -61,58 +64,66 @@ public class TapeEditController {
     }
 
     public void moveRight() {
-        dataModel.moveRight();
-        refreshTapePanel();
+        synchronized (editLock) {
+            dataModel.moveRight();
+            refreshTapePanel();
+        }
     }
 
     public void moveLeft() {
-        dataModel.moveLeft();
-        refreshTapePanel();
+        synchronized (editLock) {
+            dataModel.moveLeft();
+            refreshTapePanel();
+        }
     }
 
     public void changeSymbol(String value) {
-        Symbol postponedSymbol;
-        try {
-            postponedSymbol = new Symbol(value);
-        } catch (SymbolException ex) {
+        synchronized (editLock) {
+            Symbol postponedSymbol;
             try {
-                tapePanel.updateView(0, dataModel.read());
-            } catch (TapeException e) {
-                Logger.error(e);
+                postponedSymbol = new Symbol(value);
+            } catch (SymbolException ex) {
+                try {
+                    tapePanel.updateView(0, dataModel.read());
+                } catch (TapeException e) {
+                    Logger.error(e);
+                }
+                return;
             }
-            return;
-        }
-        if (programModel.getAvailableSymbols().contains(postponedSymbol)) {
-            dataModel.write(postponedSymbol);
-        } else {
-            try {
-                tapePanel.updateView(0, dataModel.read());
-            } catch (TapeException e) {
-                Logger.error(e);
+            if (programModel.getAvailableSymbols().contains(postponedSymbol)) {
+                dataModel.write(postponedSymbol);
+            } else {
+                try {
+                    tapePanel.updateView(0, dataModel.read());
+                } catch (TapeException e) {
+                    Logger.error(e);
+                }
             }
         }
     }
 
     public void changeSymbol(int diffToHead, String value) {
-        Symbol postponedSymbol;
-        try {
-            postponedSymbol = new Symbol(value);
-        } catch (SymbolException ex) {
+        synchronized (editLock) {
+            Symbol postponedSymbol;
             try {
-                tapePanel.updateView(diffToHead, dataModel.read(diffToHead));
-            } catch (TapeException e) {
-                Logger.error(e);
+                postponedSymbol = new Symbol(value);
+            } catch (SymbolException ex) {
+                try {
+                    tapePanel.updateView(diffToHead, dataModel.read(diffToHead));
+                } catch (TapeException e) {
+                    Logger.error(e);
+                }
+                return;
             }
-            return;
-        }
 
-        if (programModel.getAvailableSymbols().contains(postponedSymbol)) {
-            dataModel.write(postponedSymbol, diffToHead);
-        } else {
-            try {
-                tapePanel.updateView(diffToHead, dataModel.read(diffToHead));
-            } catch (TapeException e) {
-                Logger.error(e);
+            if (programModel.getAvailableSymbols().contains(postponedSymbol)) {
+                dataModel.write(postponedSymbol, diffToHead);
+            } else {
+                try {
+                    tapePanel.updateView(diffToHead, dataModel.read(diffToHead));
+                } catch (TapeException e) {
+                    Logger.error(e);
+                }
             }
         }
     }

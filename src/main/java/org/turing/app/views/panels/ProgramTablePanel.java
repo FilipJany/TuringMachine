@@ -86,9 +86,9 @@ public class ProgramTablePanel extends JPanel {
 
     private void placeComponentsOnPanel() {
         layout.putConstraint(NORTH, sp, 2, NORTH, this);
-        layout.putConstraint(SOUTH, sp, -20, SOUTH, this);
+        layout.putConstraint(SOUTH, sp, -23, SOUTH, this);
         layout.putConstraint(WEST, sp, 2, WEST, this);
-        layout.putConstraint(EAST, sp, -40, EAST, this);
+        layout.putConstraint(EAST, sp, -46, EAST, this);
 
         layout.putConstraint(NORTH, addColumn, 5, NORTH, this);
         layout.putConstraint(WEST, addColumn, 5, EAST, sp);
