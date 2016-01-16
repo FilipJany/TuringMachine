@@ -19,9 +19,17 @@ public class Exporter {
         this.tapeExporter = tapeExporter;
     }
 
-    public void exportToFile(String filename) {
+    public void exportProgramToFile(String filename) {
         JSONObject jsonData = programExporter.getProgramDataAsJson();
-        jsonData.putAll(tapeExporter.getTapeDataAsJson());
+        exportJsonObjectToFile(filename, jsonData);
+    }
+
+    public void exportTapeToFile(String filename) {
+        JSONObject jsonData = tapeExporter.getTapeDataAsJson();
+        exportJsonObjectToFile(filename, jsonData);
+    }
+
+    private void exportJsonObjectToFile(String filename, JSONObject jsonData) {
         try {
             Files.write(jsonData.toJSONString(), new File(filename), Charsets.UTF_8);
         } catch (IOException e) {

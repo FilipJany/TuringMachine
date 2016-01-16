@@ -1,12 +1,18 @@
 package org.turing.app.views;
 
+import org.turing.app.controllers.ImportExportController;
+import org.turing.support.Logger;
+
 import javax.swing.*;
+import java.awt.event.ActionListener;
+import java.util.function.Consumer;
 
 /**
  * Created by FiFi on 2015-11-11.
  */
 public class MenuBar
 {
+    private final ImportExportController importExportController;
     private JMenuBar menuBar;
     private JMenu file, run, view, help;
     private JMenuItem fileNewProgram, fileLoadProgram, fileClearTape, fileLoadTape, fileSaveProgram, fileSaveTape, fileRename, fileDeilimiter;
@@ -14,8 +20,10 @@ public class MenuBar
     private JMenuItem viewShiftLeft, viewShiftRight, viewDefault;
     private JMenuItem helpUG, helpAbout, helpLicence;
 
-    public MenuBar()
+    public MenuBar(ImportExportController importExportController)
     {
+        this.importExportController = importExportController;
+
         createMenuBar();
 
         createFileMenu();
@@ -28,6 +36,8 @@ public class MenuBar
         addItemsToRunMenu();
         addItemsToViewMenu();
         addItemsToHelpMenu();
+
+        addListeners();
     }
 
     private void createMenuBar()
@@ -125,6 +135,49 @@ public class MenuBar
     private void addListeners()
     {
         //TODO:Implement
+
+        addProgramExportListener();
+        addTapeExportListener();
+        addProgramImportListener();
+        addTapeImportListener();
+    }
+
+    private void addProgramExportListener() {
+        fileSaveProgram.addActionListener(createActionWithFilenameInputDialog(
+                filename -> {importExportController.exportProgram(filename);}
+        ));
+    }
+
+    private void addTapeExportListener() {
+        fileSaveTape.addActionListener(createActionWithFilenameInputDialog(
+                filename -> {importExportController.exportTape(filename);}
+        ));
+    }
+
+    private void addProgramImportListener() {
+        fileLoadProgram.addActionListener(createActionWithFilenameInputDialog(
+                filename -> {importExportController.importProgram(filename);}
+        ));
+    }
+
+    private void addTapeImportListener() {
+        fileLoadTape.addActionListener(createActionWithFilenameInputDialog(
+                filename -> {importExportController.importTape(filename);}
+        ));
+    }
+
+    private ActionListener createActionWithFilenameInputDialog(Consumer<String> actionExecutor) {
+        return e -> {
+            String filename = JOptionPane.showInputDialog("Please specify filename");
+            if (filename != null) {
+                try {
+                    actionExecutor.accept(filename);
+                } catch (RuntimeException ex) {
+                    Logger.error(ex);
+                    JOptionPane.showMessageDialog(null, "An error occurred: " + ex.getMessage(), "error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        };
     }
 
     public JMenuBar getMenuBar() throws MenuBarException

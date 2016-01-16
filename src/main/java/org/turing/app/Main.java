@@ -1,10 +1,11 @@
 package org.turing.app;
 
 import org.turing.app.controllers.ExecutionController;
-import org.turing.app.controllers.ImportController;
+import org.turing.app.controllers.ImportExportController;
 import org.turing.app.controllers.ProgramEditController;
 import org.turing.app.controllers.TapeEditController;
 import org.turing.app.engine.TuringMachine;
+import org.turing.app.importexport.*;
 import org.turing.app.model.DataModel;
 import org.turing.app.model.ExecutionModel;
 import org.turing.app.model.ProgramModel;
@@ -27,10 +28,16 @@ public class Main {
         final ProgramEditController programEditController = new ProgramEditController(programModel, dataModel);
         final ExecutionController executionController = new ExecutionController(dataModel, programModel, executionModel, engine);
         final TapeEditController tapeEditController = new TapeEditController(dataModel, programModel, executionController);
-        final ImportController importController = new ImportController(dataModel, programModel);
+        final ProgramExporter programExporter = new ProgramExporter(programModel);
+        final TapeExporter tapeExporter = new TapeExporter(dataModel);
+        final Exporter exporter = new Exporter(programExporter, tapeExporter);
+        final ProgramImporter programImporter = new ProgramImporter(programModel);
+        final TapeImporter tapeImporter = new TapeImporter(dataModel);
+        final Importer importer = new Importer(programImporter, tapeImporter);
+        final ImportExportController importExportController = new ImportExportController(dataModel, programModel, exporter, importer, programEditController, tapeEditController);
 
-        final ProgramFrameView mainFrameView = new ProgramFrameView(importController, programEditController);
-        final MainFrameView programFrameView = new MainFrameView(executionController, tapeEditController, importController, programEditController);
+        final ProgramFrameView mainFrameView = new ProgramFrameView(importExportController, programEditController);
+        final MainFrameView programFrameView = new MainFrameView(executionController, tapeEditController, importExportController, programEditController);
 
         Application application = new Application(mainFrameView, programFrameView);
 

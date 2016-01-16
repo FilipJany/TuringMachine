@@ -49,8 +49,7 @@ public class ProgramEditController {
             for (Symbol symbol : programModel.getAvailableSymbols())
                 programModel.addNewTransition(newState, symbol, defaultActionTriple);
 
-            ((AbstractTableModel) programTable.getModel()).fireTableDataChanged();
-            statePanel.updateAvailableStates(programModel.getAvailableStates());
+            refreshProgramTableAndStatePanel();
         }
     }
 
@@ -72,6 +71,10 @@ public class ProgramEditController {
             return;
         }
 
+        refreshProgramTableAndStatePanel();
+    }
+
+    public void refreshProgramTableAndStatePanel() {
         ((AbstractTableModel) programTable.getModel()).fireTableDataChanged();
         statePanel.updateAvailableStates(programModel.getAvailableStates());
     }
@@ -103,7 +106,7 @@ public class ProgramEditController {
             programModel.addNewSymbol(newSymbol);
             for (State state : programModel.getAvailableStates())
                 programModel.addNewTransition(state, newSymbol, defaultActionTriple);
-            ((AbstractTableModel) programTable.getModel()).fireTableStructureChanged();
+            refreshProgramTable();
         }
     }
 
@@ -125,6 +128,10 @@ public class ProgramEditController {
             return;
         }
 
+        refreshProgramTable();
+    }
+
+    public void refreshProgramTable() {
         ((AbstractTableModel) programTable.getModel()).fireTableStructureChanged();
     }
 

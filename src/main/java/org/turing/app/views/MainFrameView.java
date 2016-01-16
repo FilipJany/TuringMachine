@@ -1,7 +1,7 @@
 package org.turing.app.views;
 
 import org.turing.app.controllers.ExecutionController;
-import org.turing.app.controllers.ImportController;
+import org.turing.app.controllers.ImportExportController;
 import org.turing.app.controllers.ProgramEditController;
 import org.turing.app.controllers.TapeEditController;
 import org.turing.app.views.constants.ApplicationConstraints;
@@ -21,7 +21,7 @@ public class MainFrameView {
 
     private final ExecutionController executionController;
     private final TapeEditController tapeEditController;
-    private final ImportController importController;
+    private final ImportExportController importExportController;
     private final ProgramEditController programEditController;
 
     private ControlPanel controlPanel;
@@ -34,10 +34,10 @@ public class MainFrameView {
     private SpringLayout layout;
 
 
-    public MainFrameView(ExecutionController executionController, TapeEditController tapeEditController, ImportController importController, ProgramEditController programEditController) {
+    public MainFrameView(ExecutionController executionController, TapeEditController tapeEditController, ImportExportController importExportController, ProgramEditController programEditController) {
         this.executionController = executionController;
         this.tapeEditController = tapeEditController;
-        this.importController = importController;
+        this.importExportController = importExportController;
         this.programEditController = programEditController;
     }
 
@@ -77,7 +77,7 @@ public class MainFrameView {
 
     private void createAndInitMenuBar()
     {
-        menuBar = new MenuBar();
+        menuBar = new MenuBar(importExportController);
         try
         {
             frame.setJMenuBar(menuBar.getMenuBar());

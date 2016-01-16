@@ -1,6 +1,6 @@
 package org.turing.app.views;
 
-import org.turing.app.controllers.ImportController;
+import org.turing.app.controllers.ImportExportController;
 import org.turing.app.controllers.ProgramEditController;
 import org.turing.app.views.constants.ApplicationConstraints;
 import org.turing.app.views.constants.ApplicationStrings;
@@ -14,7 +14,7 @@ import static javax.swing.SpringLayout.*;
 
 public class ProgramFrameView {
 
-    private final ImportController importController;
+    private final ImportExportController importExportController;
     private final ProgramEditController programEditController;
 
     private ProgramTablePanel tablePanel;
@@ -23,8 +23,8 @@ public class ProgramFrameView {
     private JFrame frame;
     private SpringLayout layout;
 
-    public ProgramFrameView(ImportController importController, ProgramEditController programEditController) {
-        this.importController = importController;
+    public ProgramFrameView(ImportExportController importExportController, ProgramEditController programEditController) {
+        this.importExportController = importExportController;
         this.programEditController = programEditController;
     }
 
@@ -52,7 +52,7 @@ public class ProgramFrameView {
 
     private void createAndInitMenuBar()
     {
-        menuBar = new MenuBar();
+        menuBar = new MenuBar(importExportController);
         try
         {
             frame.setJMenuBar(menuBar.getMenuBar());
