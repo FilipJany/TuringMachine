@@ -1,8 +1,6 @@
 package org.turing.app.engine;
 
 import org.turing.app.common.MoveDirection;
-import org.turing.app.common.State;
-import org.turing.app.common.Symbol;
 import org.turing.app.model.ActionTriple;
 import org.turing.app.model.DataModel;
 import org.turing.app.model.ProgramModel;
