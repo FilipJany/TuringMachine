@@ -1,9 +1,15 @@
 package org.turing.app.views;
 
 import org.turing.app.controllers.ImportExportController;
+import org.turing.app.controllers.ProgramEditController;
+import org.turing.app.controllers.TapeEditController;
+import org.turing.app.model.DataModel;
+import org.turing.app.model.ProgramModel;
 import org.turing.support.Logger;
+import org.turing.support.LoggerGUI;
 
 import javax.swing.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.function.Consumer;
 
@@ -13,16 +19,27 @@ import java.util.function.Consumer;
 public class MenuBar
 {
     private final ImportExportController importExportController;
+    private final DataModel dataModel;
+    private final ProgramModel programModel;
+    private final JFrame masterFrame;
+    private final ProgramEditController programEditController;
+    private final TapeEditController tapeEditController;
+
     private JMenuBar menuBar;
     private JMenu file, run, view, help;
-    private JMenuItem fileNewProgram, fileLoadProgram, fileClearTape, fileLoadTape, fileSaveProgram, fileSaveTape, fileRename, fileDeilimiter;
+    private JMenuItem fileNewProgram, fileLoadProgram, fileClearTape, fileLoadTape, fileSaveProgram, fileSaveTape, authors, fileDeilimiter;
     private JMenuItem runStart, runPause, runBackward, runForward, runSlower, runFaster;
     private JMenuItem viewShiftLeft, viewShiftRight, viewDefault;
     private JMenuItem helpUG, helpAbout, helpLicence;
 
-    public MenuBar(ImportExportController importExportController)
+    public MenuBar(ImportExportController importExportController, ProgramEditController programEditController, TapeEditController tapeEditController, DataModel dataModel, ProgramModel programModel, JFrame masterFrame)
     {
         this.importExportController = importExportController;
+        this.dataModel = dataModel;
+        this.programModel = programModel;
+        this.masterFrame = masterFrame;
+        this.tapeEditController = tapeEditController;
+        this.programEditController = programEditController;
 
         createMenuBar();
 
@@ -66,7 +83,7 @@ public class MenuBar
         fileLoadTape = new JMenuItem("Load Tape");
         fileSaveProgram = new JMenuItem("Save Program");
         fileSaveTape = new JMenuItem("Save Tape");
-        fileRename = new JMenuItem("Rename");
+        authors = new JMenuItem("!Read This First!");
     }
 
     private void addItemsToFileMenu()
@@ -79,7 +96,7 @@ public class MenuBar
         file.addSeparator();
         file.add(fileSaveProgram);
         file.add(fileSaveTape);
-        file.add(fileRename);
+        file.add(authors);
     }
 
     private void createRunMenu()
@@ -140,6 +157,30 @@ public class MenuBar
         addTapeExportListener();
         addProgramImportListener();
         addTapeImportListener();
+        addNewProgramListener();
+        addClearTapeListener();
+        addAuthorsListener();
+    }
+
+    private void addAuthorsListener()
+    {
+        authors.addActionListener(e -> LoggerGUI.showErrorDialog(masterFrame, "Just kidding - no errors ;) \nCreated by: jHoła, fJany, pStopyra!", "The most important information ever!"));
+    }
+
+    private void addNewProgramListener()
+    {
+        fileNewProgram.addActionListener(e -> {
+            programModel.clear();
+            programEditController.fullyRefreshProgramTableAndStatePanel();
+        });
+    }
+
+    private void addClearTapeListener()
+    {
+        fileClearTape.addActionListener(e -> {
+            dataModel.clear();
+            tapeEditController.refreshTapePanel();
+        });
     }
 
     private void addProgramExportListener() {

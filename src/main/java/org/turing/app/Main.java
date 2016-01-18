@@ -36,8 +36,8 @@ public class Main {
         final Importer importer = new Importer(programImporter, tapeImporter);
         final ImportExportController importExportController = new ImportExportController(dataModel, programModel, exporter, importer, programEditController, tapeEditController);
 
-        final ProgramFrameView mainFrameView = new ProgramFrameView(importExportController, programEditController);
-        final MainFrameView programFrameView = new MainFrameView(executionController, tapeEditController, importExportController, programEditController);
+        final ProgramFrameView mainFrameView = new ProgramFrameView(importExportController, programEditController, tapeEditController, dataModel, programModel);
+        final MainFrameView programFrameView = new MainFrameView(executionController, tapeEditController, importExportController, programEditController, dataModel, programModel);
 
         Application application = new Application(mainFrameView, programFrameView);
 

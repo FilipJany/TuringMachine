@@ -2,20 +2,32 @@ package org.turing.app.views;
 
 import org.turing.app.controllers.ImportExportController;
 import org.turing.app.controllers.ProgramEditController;
+import org.turing.app.controllers.TapeEditController;
+import org.turing.app.model.DataModel;
+import org.turing.app.model.ProgramModel;
 import org.turing.app.views.constants.ApplicationConstraints;
 import org.turing.app.views.constants.ApplicationStrings;
 import org.turing.app.views.panels.ProgramTablePanel;
 import org.turing.support.Logger;
+import org.turing.support.LoggerGUI;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
+import java.util.function.Consumer;
 
 import static javax.swing.SpringLayout.*;
 
 public class ProgramFrameView {
 
     private final ImportExportController importExportController;
+    private final DataModel dataModel;
+    private final ProgramModel programModel;
     private final ProgramEditController programEditController;
+    private final TapeEditController tapeEditController;
 
     private ProgramTablePanel tablePanel;
     private MenuBar menuBar;
@@ -23,9 +35,12 @@ public class ProgramFrameView {
     private JFrame frame;
     private SpringLayout layout;
 
-    public ProgramFrameView(ImportExportController importExportController, ProgramEditController programEditController) {
+    public ProgramFrameView(ImportExportController importExportController, ProgramEditController programEditController, TapeEditController tapeEditController, DataModel dataModel, ProgramModel programModel) {
         this.importExportController = importExportController;
         this.programEditController = programEditController;
+        this.tapeEditController = tapeEditController;
+        this.dataModel = dataModel;
+        this.programModel = programModel;
     }
 
     public void init() {
@@ -52,7 +67,7 @@ public class ProgramFrameView {
 
     private void createAndInitMenuBar()
     {
-        menuBar = new MenuBar(importExportController);
+        menuBar = new MenuBar(importExportController, programEditController, tapeEditController, dataModel, programModel, frame);
         try
         {
             frame.setJMenuBar(menuBar.getMenuBar());
@@ -69,7 +84,7 @@ public class ProgramFrameView {
         frame.setSize(ApplicationConstraints.programFrameMinimalWidth, ApplicationConstraints.programFrameMinimalHeight);
         frame.setMinimumSize(new Dimension(ApplicationConstraints.programFrameMinimalWidth, ApplicationConstraints.programFrameMinimalHeight));
         frame.setLayout(layout);
-        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        frame.addWindowListener(quitListener);
     }
 
     private void createAndInitTablePanel()
@@ -87,4 +102,23 @@ public class ProgramFrameView {
     private void updateControllers() {
         programEditController.setProgramTable(tablePanel.getTable());
     }
+
+    WindowListener quitListener = new WindowAdapter()
+    {
+        @Override
+        public void windowClosing(WindowEvent e)
+        {
+            int confirm = LoggerGUI.showQuestionDialogYesNo(frame, "Do you want to save data before exit?", "Question");
+            if(confirm == 0)
+            {
+                String programFileName = LoggerGUI.showInputDialog(frame, "Program file name:", "Program Save Dialog");
+                String tapeFileName = LoggerGUI.showInputDialog(frame, "Data file name:", "Data Save Dialog");
+                if(programFileName != null)
+                    importExportController.exportProgram(programFileName);
+                if(tapeFileName != null)
+                    importExportController.exportTape(tapeFileName);
+            }
+            System.exit(0);
+        }
+    };
 }
