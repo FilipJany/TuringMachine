@@ -106,7 +106,7 @@ public class TapeEditController {
         synchronized (editLock) {
             Symbol postponedSymbol;
             try {
-                postponedSymbol = new Symbol(value);
+                postponedSymbol = value.equals("") ? BLANK : new Symbol(value);
             } catch (SymbolException ex) {
                 try {
                     tapePanel.updateView(diffToHead, dataModel.read(diffToHead));

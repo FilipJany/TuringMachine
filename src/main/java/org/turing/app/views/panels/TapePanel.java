@@ -157,7 +157,8 @@ public class TapePanel extends JPanel {
 
                 @Override
                 public void removeUpdate(DocumentEvent e) {
-                    //do nothing
+                    if (!interiorModification)
+                        tapeEditController.changeSymbol(cellDiff, cell.getText());
                 }
 
                 @Override
