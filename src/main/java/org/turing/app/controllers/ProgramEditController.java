@@ -74,8 +74,13 @@ public class ProgramEditController {
         refreshProgramTableAndStatePanel();
     }
 
-    public void refreshProgramTableAndStatePanel() {
+    private void refreshProgramTableAndStatePanel() {
         ((AbstractTableModel) programTable.getModel()).fireTableDataChanged();
+        statePanel.updateAvailableStates(programModel.getAvailableStates());
+    }
+
+    public void fullyRefreshProgramTableAndStatePanel() {
+        ((AbstractTableModel) programTable.getModel()).fireTableStructureChanged();
         statePanel.updateAvailableStates(programModel.getAvailableStates());
     }
 
@@ -131,7 +136,7 @@ public class ProgramEditController {
         refreshProgramTable();
     }
 
-    public void refreshProgramTable() {
+    private void refreshProgramTable() {
         ((AbstractTableModel) programTable.getModel()).fireTableStructureChanged();
     }
 

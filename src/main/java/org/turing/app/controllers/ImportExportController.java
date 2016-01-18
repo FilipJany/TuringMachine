@@ -36,7 +36,7 @@ public class ImportExportController {
         try {
             importer.importProgramFromFile(filename);
         } finally {
-            programEditController.refreshProgramTableAndStatePanel();
+            programEditController.fullyRefreshProgramTableAndStatePanel();
             tapeEditController.refreshTapePanel();
         }
     }
@@ -46,7 +46,7 @@ public class ImportExportController {
         try {
             importer.importTapeFromFile(filename);
         } finally {
-            programEditController.refreshProgramTableAndStatePanel();
+            programEditController.fullyRefreshProgramTableAndStatePanel();
             tapeEditController.refreshTapePanel();
         }
     }
