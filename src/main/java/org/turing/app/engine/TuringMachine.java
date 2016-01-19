@@ -33,7 +33,7 @@ public class TuringMachine implements ITuringMachine
         startEngine();
     }
 
-    public boolean isSymbolOnStackRun(Symbol s)
+    public boolean deleteHistoryIfOccurs(Symbol s)
     {
         for (ActionTriple at : previousActions)
             if(at.getSymbol() == s)
@@ -44,7 +44,7 @@ public class TuringMachine implements ITuringMachine
         return false;
     }
 
-    public boolean isStateOnStackRun(State s)
+    public boolean deleteHistoryIfOccurs(State s)
     {
         for (ActionTriple at : previousActions)
             if(at.getState() == s)

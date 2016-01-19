@@ -64,7 +64,7 @@ public class ProgramEditController {
                 {
                     State delState = programModel.getStateAt(programTable.getSelectedRow());
                     programModel.deleteState(delState);
-                    if(engine.isStateOnStackRun(delState))
+                    if(engine.deleteHistoryIfOccurs(delState))
                         LoggerGUI.showInfoDialog(programFrame, "Deleted state on execution state - backwards debug unavailable", "Information");
                 }
                 else
@@ -131,7 +131,7 @@ public class ProgramEditController {
                 {
                     Symbol delSymbol = programModel.getSymbolAt(programTable.getSelectedColumn() - 1);
                     programModel.deleteSymbol(delSymbol);
-                    if(engine.isSymbolOnStackRun(delSymbol))
+                    if(engine.deleteHistoryIfOccurs(delSymbol))
                         LoggerGUI.showInfoDialog(programFrame, "Deleted symbol on execution state - backwards debug unavailable", "Information");
                 }
                 else
