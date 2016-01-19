@@ -69,6 +69,11 @@ public class ExecutionController {
         }
     }
 
+    public int getExecutionDelay()
+    {
+        return executionModel.getExecutionDelay();
+    }
+
     public void refreshSliderPanel() {
         int delay = executionModel.getExecutionDelay();
         sliderPanel.updateView(delay, delay == ExecutionModel.MAX_DELAY ? "Step by step mode" : "Delay between moves: " + delay + " s");

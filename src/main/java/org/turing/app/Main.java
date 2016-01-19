@@ -25,7 +25,7 @@ public class Main {
 
         final TuringMachine engine = new TuringMachine(programModel, dataModel);
 
-        final ProgramEditController programEditController = new ProgramEditController(programModel, dataModel);
+        final ProgramEditController programEditController = new ProgramEditController(programModel, dataModel, engine);
         final ExecutionController executionController = new ExecutionController(dataModel, programModel, executionModel, engine);
         final TapeEditController tapeEditController = new TapeEditController(dataModel, programModel, executionController);
         final ProgramExporter programExporter = new ProgramExporter(programModel);
@@ -36,7 +36,7 @@ public class Main {
         final Importer importer = new Importer(programImporter, tapeImporter);
         final ImportExportController importExportController = new ImportExportController(dataModel, programModel, exporter, importer, programEditController, tapeEditController);
 
-        final ProgramFrameView mainFrameView = new ProgramFrameView(importExportController, programEditController, tapeEditController, dataModel, programModel);
+        final ProgramFrameView mainFrameView = new ProgramFrameView(importExportController, programEditController, tapeEditController, executionController, dataModel, programModel);
         final MainFrameView programFrameView = new MainFrameView(executionController, tapeEditController, importExportController, programEditController, dataModel, programModel);
 
         Application application = new Application(mainFrameView, programFrameView);

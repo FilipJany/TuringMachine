@@ -2,6 +2,7 @@ package org.turing.app.controllers;
 
 import org.turing.app.common.State;
 import org.turing.app.common.Symbol;
+import org.turing.app.engine.TuringMachine;
 import org.turing.app.exceptions.SymbolException;
 import org.turing.app.model.ActionTriple;
 import org.turing.app.model.DataModel;
@@ -9,6 +10,7 @@ import org.turing.app.model.ProgramModel;
 import org.turing.app.views.constants.ApplicationStrings;
 import org.turing.app.views.panels.StatePanel;
 import org.turing.app.views.panels.TapePanel;
+import org.turing.support.LoggerGUI;
 
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
@@ -22,13 +24,15 @@ public class ProgramEditController {
 
     private final ProgramModel programModel;
     private final DataModel dataModel;
+    private final TuringMachine engine;
 
     private JFrame programFrame;
     private JTable programTable;
     private StatePanel statePanel;
     private TapePanel tapePanel;
 
-    public ProgramEditController(ProgramModel programModel, DataModel dataModel) {
+    public ProgramEditController(ProgramModel programModel, DataModel dataModel, TuringMachine engine) {
+        this.engine = engine;
         this.programModel = programModel;
         this.dataModel = dataModel;
     }
@@ -57,7 +61,12 @@ public class ProgramEditController {
         try {
             if (programTable.getSelectedRow() >= 0) {
                 if(dataModel.getState() != programModel.getStateAt(programTable.getSelectedRow()))
-                    programModel.deleteState(programModel.getStateAt(programTable.getSelectedRow()));
+                {
+                    State delState = programModel.getStateAt(programTable.getSelectedRow());
+                    programModel.deleteState(delState);
+                    if(engine.isStateOnStackRun(delState))
+                        LoggerGUI.showInfoDialog(programFrame, "Deleted state on execution state - backwards debug unavailable", "Information");
+                }
                 else
                 {
                     JOptionPane.showMessageDialog(
@@ -119,7 +128,12 @@ public class ProgramEditController {
         try {
             if (programTable.getSelectedColumn() > 0) {
                 if(canSymbolBeRemoved(programModel.getSymbolAt(programTable.getSelectedColumn() - 1)))
-                    programModel.deleteSymbol(programModel.getSymbolAt(programTable.getSelectedColumn() - 1));
+                {
+                    Symbol delSymbol = programModel.getSymbolAt(programTable.getSelectedColumn() - 1);
+                    programModel.deleteSymbol(delSymbol);
+                    if(engine.isSymbolOnStackRun(delSymbol))
+                        LoggerGUI.showInfoDialog(programFrame, "Deleted symbol on execution state - backwards debug unavailable", "Information");
+                }
                 else
                 {
                     JOptionPane.showMessageDialog(

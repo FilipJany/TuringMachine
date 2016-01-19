@@ -1,11 +1,15 @@
 package org.turing.app.engine;
 
 import org.turing.app.common.MoveDirection;
+import org.turing.app.common.State;
+import org.turing.app.common.Symbol;
 import org.turing.app.model.ActionTriple;
 import org.turing.app.model.DataModel;
 import org.turing.app.model.ProgramModel;
 import org.turing.support.Logger;
+import org.turing.support.LoggerGUI;
 
+import javax.swing.*;
 import java.util.Stack;
 
 /**
@@ -27,6 +31,28 @@ public class TuringMachine implements ITuringMachine
         this.programModel = programModel;
         this.dataModel = dataModel;
         startEngine();
+    }
+
+    public boolean isSymbolOnStackRun(Symbol s)
+    {
+        for (ActionTriple at : previousActions)
+            if(at.getSymbol() == s)
+            {
+                previousActions.clear();
+                return true;
+            }
+        return false;
+    }
+
+    public boolean isStateOnStackRun(State s)
+    {
+        for (ActionTriple at : previousActions)
+            if(at.getState() == s)
+            {
+                previousActions.clear();
+                return true;
+            }
+        return false;
     }
 
     //Check Section - checks if everything is prepared to run engine
@@ -121,7 +147,7 @@ public class TuringMachine implements ITuringMachine
 
         }
         else
-            Logger.log(TuringEngineConstraints.PreviousSymbolStackEmpty);
+            LoggerGUI.showInfoDialog(new JFrame(), TuringEngineConstraints.PreviousSymbolStackEmpty, "Information");
     }
 
     private void makeStep(MoveDirection direction)
