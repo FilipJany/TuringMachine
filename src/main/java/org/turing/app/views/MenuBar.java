@@ -1,5 +1,6 @@
 package org.turing.app.views;
 
+import org.turing.app.controllers.ExecutionController;
 import org.turing.app.controllers.ImportExportController;
 import org.turing.app.controllers.ProgramEditController;
 import org.turing.app.controllers.TapeEditController;
@@ -18,6 +19,7 @@ import java.util.function.Consumer;
  */
 public class MenuBar
 {
+    private final ExecutionController execController;
     private final ImportExportController importExportController;
     private final DataModel dataModel;
     private final ProgramModel programModel;
@@ -29,11 +31,12 @@ public class MenuBar
     private JMenu file, run, view, help;
     private JMenuItem fileNewProgram, fileLoadProgram, fileClearTape, fileLoadTape, fileSaveProgram, fileSaveTape, authors, fileDeilimiter;
     private JMenuItem runStart, runPause, runBackward, runForward, runSlower, runFaster;
-    private JMenuItem viewShiftLeft, viewShiftRight, viewDefault;
+    private JMenuItem viewShiftLeft, viewShiftRight;
     private JMenuItem helpUG, helpAbout, helpLicence;
 
-    public MenuBar(ImportExportController importExportController, ProgramEditController programEditController, TapeEditController tapeEditController, DataModel dataModel, ProgramModel programModel, JFrame masterFrame)
+    public MenuBar(ImportExportController importExportController, ProgramEditController programEditController, TapeEditController tapeEditController, ExecutionController execController, DataModel dataModel, ProgramModel programModel, JFrame masterFrame)
     {
+        this.execController = execController;
         this.importExportController = importExportController;
         this.dataModel = dataModel;
         this.programModel = programModel;
@@ -124,15 +127,12 @@ public class MenuBar
     {
         viewShiftLeft = new JMenuItem("Shift tape to the left");
         viewShiftRight = new JMenuItem("Shift tape to the right");
-        viewDefault = new JMenuItem("Default View");
     }
 
     private void addItemsToViewMenu()
     {
         view.add(viewShiftLeft);
         view.add(viewShiftRight);
-        view.addSeparator();
-        view.add(viewDefault);
     }
 
     private void createHelpMenu()
@@ -151,8 +151,6 @@ public class MenuBar
 
     private void addListeners()
     {
-        //TODO:Implement
-
         addProgramExportListener();
         addTapeExportListener();
         addProgramImportListener();
@@ -160,6 +158,56 @@ public class MenuBar
         addNewProgramListener();
         addClearTapeListener();
         addAuthorsListener();
+
+        addRunBackwardListener();
+        addRunFasterListener();
+        addRunPauseListener();
+        addRunForwardListener();
+        addRunSlowerListener();
+        addRunStartListener();
+
+        addViewShiftLeftListener();
+        addViewShiftRightListener();
+    }
+
+    private void addViewShiftLeftListener()
+    {
+        viewShiftLeft.addActionListener(e -> tapeEditController.moveLeft());
+    }
+
+    private void addViewShiftRightListener()
+    {
+        viewShiftRight.addActionListener(e -> tapeEditController.moveRight());
+    }
+
+    private void addRunStartListener()
+    {
+        runStart.addActionListener(e-> execController.play());
+    }
+
+    private void addRunPauseListener()
+    {
+        runPause.addActionListener(e-> execController.pause());
+    }
+
+    private void addRunBackwardListener()
+    {
+        runBackward.addActionListener(e-> execController.stepBackward());
+    }
+
+    private void addRunForwardListener()
+    {
+        runForward.addActionListener(e-> execController.stepForward());
+    }
+
+    private void addRunFasterListener()
+    {
+        runFaster.addActionListener(e-> execController.updateStepDelay(execController.getExecutionDelay()-1));
+    }
+
+    private void addRunSlowerListener()
+    {
+        runSlower.addActionListener(e-> execController.updateStepDelay(execController.getExecutionDelay()+1));
     }
 
     private void addAuthorsListener()

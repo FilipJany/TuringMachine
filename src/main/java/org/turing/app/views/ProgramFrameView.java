@@ -1,5 +1,6 @@
 package org.turing.app.views;
 
+import org.turing.app.controllers.ExecutionController;
 import org.turing.app.controllers.ImportExportController;
 import org.turing.app.controllers.ProgramEditController;
 import org.turing.app.controllers.TapeEditController;
@@ -23,6 +24,7 @@ import static javax.swing.SpringLayout.*;
 
 public class ProgramFrameView {
 
+    private final ExecutionController execController;
     private final ImportExportController importExportController;
     private final DataModel dataModel;
     private final ProgramModel programModel;
@@ -35,7 +37,8 @@ public class ProgramFrameView {
     private JFrame frame;
     private SpringLayout layout;
 
-    public ProgramFrameView(ImportExportController importExportController, ProgramEditController programEditController, TapeEditController tapeEditController, DataModel dataModel, ProgramModel programModel) {
+    public ProgramFrameView(ImportExportController importExportController, ProgramEditController programEditController, TapeEditController tapeEditController, ExecutionController execController, DataModel dataModel, ProgramModel programModel) {
+        this.execController = execController;
         this.importExportController = importExportController;
         this.programEditController = programEditController;
         this.tapeEditController = tapeEditController;
@@ -67,7 +70,7 @@ public class ProgramFrameView {
 
     private void createAndInitMenuBar()
     {
-        menuBar = new MenuBar(importExportController, programEditController, tapeEditController, dataModel, programModel, frame);
+        menuBar = new MenuBar(importExportController, programEditController, tapeEditController, execController, dataModel, programModel, frame);
         try
         {
             frame.setJMenuBar(menuBar.getMenuBar());

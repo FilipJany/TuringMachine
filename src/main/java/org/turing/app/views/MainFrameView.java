@@ -108,7 +108,7 @@ public class MainFrameView {
 
     private void createAndInitMenuBar()
     {
-        menuBar = new MenuBar(importExportController, programEditController, tapeEditController, dataModel, programModel, frame);
+        menuBar = new MenuBar(importExportController, programEditController, tapeEditController, executionController, dataModel, programModel, frame);
         try
         {
             frame.setJMenuBar(menuBar.getMenuBar());
