@@ -1,0 +1,7 @@
+Tape:
+ - for moving left and right on the visible tape use arrows
+ - for moving the whole tape use arrows with ALT key
+
+Control:
+ - start or pause using ENTER key
+ - step forward and backward using right and left arrow with CTRL key

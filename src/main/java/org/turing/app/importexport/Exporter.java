@@ -19,19 +19,19 @@ public class Exporter {
         this.tapeExporter = tapeExporter;
     }
 
-    public void exportProgramToFile(String filename) {
+    public void exportProgramToFile(File file) {
         JSONObject jsonData = programExporter.getProgramDataAsJson();
-        exportJsonObjectToFile(filename, jsonData);
+        exportJsonObjectToFile(file, jsonData);
     }
 
-    public void exportTapeToFile(String filename) {
+    public void exportTapeToFile(File file) {
         JSONObject jsonData = tapeExporter.getTapeDataAsJson();
-        exportJsonObjectToFile(filename, jsonData);
+        exportJsonObjectToFile(file, jsonData);
     }
 
-    private void exportJsonObjectToFile(String filename, JSONObject jsonData) {
+    private void exportJsonObjectToFile(File file, JSONObject jsonData) {
         try {
-            Files.write(jsonData.toJSONString(), new File(filename), Charsets.UTF_8);
+            Files.write(jsonData.toJSONString(), file, Charsets.UTF_8);
         } catch (IOException e) {
             Logger.error(e);
             throw new ImportExportException("Export to file failed");

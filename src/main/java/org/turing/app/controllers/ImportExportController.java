@@ -8,6 +8,8 @@ import org.turing.app.importexport.Importer;
 import org.turing.app.model.ActionTriple;
 import org.turing.app.model.DataModel;
 import org.turing.app.model.ProgramModel;
+
+import java.io.File;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -29,18 +31,18 @@ public class ImportExportController {
         this.tapeEditController = tapeEditController;
     }
 
-    public void exportProgram(String filename) {
-        exporter.exportProgramToFile(filename);
+    public void exportProgram(File file) {
+        exporter.exportProgramToFile(file);
     }
 
-    public void exportTape(String filename) {
-        exporter.exportTapeToFile(filename);
+    public void exportTape(File file) {
+        exporter.exportTapeToFile(file);
     }
 
-    public void importProgram(String filename) {
+    public void importProgram(File file) {
         programModel.clear();
         try {
-            importer.importProgramFromFile(filename);
+            importer.importProgramFromFile(file);
         } finally {
             addMissingSymbolsAndTransitionsWhileImportingProgram();
             programEditController.fullyRefreshProgramTableAndStatePanel();
@@ -48,10 +50,10 @@ public class ImportExportController {
         }
     }
 
-    public void importTape(String filename) {
+    public void importTape(File file) {
         dataModel.clear();
         try {
-            importer.importTapeFromFile(filename);
+            importer.importTapeFromFile(file);
         } finally {
             addMissingSymbolsAndTransitionsWhileImportingTape();
             programEditController.fullyRefreshProgramTableAndStatePanel();
