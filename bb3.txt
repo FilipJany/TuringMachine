@@ -1,0 +1,1 @@
+{"transitions":{"s0":{"":["s1","1","RIGHT"],"0":["s1","1","RIGHT"],"1":["s0","1","NONE"]},"s1":{"":["s2","0","RIGHT"],"0":["s2","0","RIGHT"],"1":["s1","1","RIGHT"]},"s2":{"":["s2","1","LEFT"],"0":["s2","1","LEFT"],"1":["s2","1","LEFT"]},"HALT|final":{"0":["HALT|final","","NONE"],"1":["HALT|final","","NONE"]}},"symbols":["","0","1"],"states":["HALT|final","s0","s1","s2"]}
