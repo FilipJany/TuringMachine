@@ -4,12 +4,13 @@ import org.turing.app.common.Symbol;
 import org.turing.app.controllers.TapeEditController;
 import org.turing.app.exceptions.TapeException;
 import org.turing.app.views.constants.ApplicationConstraints;
-import org.turing.support.Logger;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -80,6 +81,8 @@ public class TapePanel extends JPanel {
         addListeners();
     }
 
+
+
     private void createTapePanel() {
         layout = new SpringLayout();
         leftButton = new JButton("<");
@@ -105,6 +108,8 @@ public class TapePanel extends JPanel {
 
     private void placeButtonsOnPanel() {
         JTextField middleTextField = tape.get(tape.size() / 2);
+
+        middleTextField.requestFocus();
 
         layout.putConstraint(HORIZONTAL_CENTER, head, 0, HORIZONTAL_CENTER, middleTextField);
         layout.putConstraint(NORTH, head, -10, NORTH, this);
@@ -146,7 +151,8 @@ public class TapePanel extends JPanel {
 
     private void addListeners() {
         int diffToHead = -(tape.size() / 2);
-        for (JTextField cell : tape) {
+        for (int i = 0, tapeSize = tape.size(); i < tapeSize; i++) {
+            JTextField cell = tape.get(i);
             final int cellDiff = diffToHead;
             cell.getDocument().addDocumentListener(new DocumentListener() {
                 @Override
@@ -167,10 +173,24 @@ public class TapePanel extends JPanel {
                         tapeEditController.changeSymbol(cellDiff, cell.getText());
                 }
             });
+            addFocusChangingKeyBinding(cell, i - 1, "focus left", KeyEvent.VK_LEFT);
+            addFocusChangingKeyBinding(cell, i + 1, "focus right", KeyEvent.VK_RIGHT);
             diffToHead++;
         }
 
         leftButton.addActionListener(a -> tapeEditController.moveRight());
         rightButton.addActionListener(a -> tapeEditController.moveLeft());
+    }
+
+    private void addFocusChangingKeyBinding(JTextField cell, final int cellIndex, String actionName, int keyCode) {
+        cell.getInputMap().put(KeyStroke.getKeyStroke(keyCode, 0), actionName);
+        cell.getActionMap().put(actionName, new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(cellIndex >= 0 && cellIndex < tape.size()) {
+                    tape.get(cellIndex).requestFocus();
+                }
+            }
+        });
     }
 }

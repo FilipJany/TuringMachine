@@ -17,12 +17,7 @@ import org.turing.support.LoggerGUI;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
-import java.util.Date;
-import java.util.function.Consumer;
+import java.awt.event.*;
 
 import static javax.swing.SpringLayout.*;
 
@@ -42,6 +37,7 @@ public class MainFrameView {
     private MenuBar menuBar;
 
     private JFrame frame;
+    private JPanel contentPanel;
     private SpringLayout layout;
 
 
@@ -58,6 +54,7 @@ public class MainFrameView {
         frame = new JFrame(ApplicationStrings.ACTIONS_WINDOW_TITLE);
 
         createFrameComponents();
+        createKeyBindings();
         setFrameSettings();
         updateControllers();
 
@@ -77,9 +74,30 @@ public class MainFrameView {
         frame.addWindowListener(quitListener);
     }
 
+    private void createKeyBindings() {
+        contentPanel.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT)
+                .put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, InputEvent.ALT_DOWN_MASK), "move tape left");
+        contentPanel.getActionMap().put("move tape left", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                tapeEditController.moveRight();
+            }
+        });
+        contentPanel.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT)
+                .put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, InputEvent.ALT_DOWN_MASK), "move tape right");
+        contentPanel.getActionMap().put("move tape right", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                tapeEditController.moveLeft();
+            }
+        });
+    }
+
     private void createFrameComponents()
     {
         layout = new SpringLayout();
+        contentPanel = new JPanel();
+        frame.setContentPane(contentPanel);
 
         createAndInitControlPanel();
         createAndInitScrollPane();
