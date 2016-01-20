@@ -19,8 +19,8 @@ import java.io.IOException;
 public class Main {
 
     private static Application createApplication() {
-        final DataModel dataModel = new DataModel();
         final ProgramModel programModel = new ProgramModel();
+        final DataModel dataModel = new DataModel(programModel);
         final ExecutionModel executionModel = new ExecutionModel();
 
         final TuringMachine engine = new TuringMachine(programModel, dataModel);

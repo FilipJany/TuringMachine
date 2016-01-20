@@ -87,6 +87,7 @@ public class ProgramFrameView {
         frame.setMinimumSize(new Dimension(ApplicationConstraints.programFrameMinimalWidth, ApplicationConstraints.programFrameMinimalHeight));
         frame.setLayout(layout);
         frame.addWindowListener(quitListener);
+        frame.getContentPane().setBackground(ApplicationConstraints.background);
     }
 
     private void createAndInitTablePanel()

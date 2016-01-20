@@ -2,11 +2,15 @@ package org.turing.app.views.constants;
 
 import org.turing.app.model.ExecutionModel;
 
+import java.awt.*;
+
 /**
  * Created by fifi on 15.11.2015.
  */
 public  class ApplicationConstraints
 {
+    //General
+    public final static Color background = new Color(217, 205, 188);//new Color(173, 157, 139);
     //MainFrame
     public final static int mainFrameMinimalWidth = 770, mainFrameMinimalHeight = 300;
     public final static int mainFrameStartLocationX = 30, mainFrameStartLocationY = 30;

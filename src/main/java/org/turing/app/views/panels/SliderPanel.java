@@ -49,6 +49,8 @@ public class SliderPanel extends JPanel {
         slider.setPaintTicks(true);
         slider.setInverted(true);
         slider.setSnapToTicks(true);
+        slider.setOpaque(false);
+        setOpaque(false);
     }
 
     private void addComponentsToPanel() {
@@ -60,10 +62,10 @@ public class SliderPanel extends JPanel {
         SpringLayout layout = new SpringLayout();
 
         layout.putConstraint(WEST, speedLabel, -190, EAST, this);
-        layout.putConstraint(NORTH, speedLabel, 5, NORTH, this);
+        layout.putConstraint(NORTH, speedLabel, 10, NORTH, this);
 
         layout.putConstraint(WEST, slider, 5, WEST, this);
-        layout.putConstraint(NORTH, slider, 5, SOUTH, speedLabel);
+        layout.putConstraint(NORTH, slider, 0, SOUTH, speedLabel);
         layout.putConstraint(EAST, slider, -5, EAST, this);
         layout.putConstraint(SOUTH, slider, -5, SOUTH, this);
 

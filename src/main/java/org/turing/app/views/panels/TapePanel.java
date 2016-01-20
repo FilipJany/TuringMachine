@@ -97,6 +97,7 @@ public class TapePanel extends JPanel {
     private void setPanelProperties() {
         setSize(new Dimension(width, height));
         setLayout(layout);
+        setOpaque(false);
     }
 
     private void addComponentToPanel() {

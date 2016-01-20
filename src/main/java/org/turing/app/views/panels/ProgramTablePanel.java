@@ -8,7 +8,6 @@ import org.turing.app.model.ActionTriple;
 import org.turing.app.model.ProgramModel;
 import org.turing.app.views.constants.ApplicationConstraints;
 import org.turing.app.views.elements.ActionTripleComboBox;
-import org.turing.support.Logger;
 
 import javax.swing.*;
 import javax.swing.event.CellEditorListener;
@@ -74,6 +73,7 @@ public class ProgramTablePanel extends JPanel {
 
     private void setPanelSettings() {
         setLayout(layout);
+        setOpaque(false);
     }
 
     private void addComponentsToPanel() {
@@ -154,6 +154,7 @@ class TuringTable extends JTable {
         setCellSelectionEnabled(true);
         Dimension dim = new Dimension(INTER_CELL_SPACE, INTER_CELL_SPACE);
         setIntercellSpacing(new Dimension(dim));
+        //setBackground(ApplicationConstraints.background);
     }
 
     private JTableHeader createHeader() {
@@ -309,7 +310,7 @@ class ActionTripleCellEditor extends AbstractCellEditor implements TableCellEdit
         this.row = row;
         this.column = column;
         return whenSelected.reload((ActionTriple) value)
-                    .setSelectionBackground(table.getSelectionBackground());
+                .setSelectionBackground(table.getSelectionBackground());
     }
 
     @Override
@@ -329,7 +330,7 @@ class ActionTripleCellEditor extends AbstractCellEditor implements TableCellEdit
 
     @Override
     public boolean stopCellEditing() {
-        programModel.addNewTransition(programModel.getStateAt(row), programModel.getSymbolAt(column-1), whenSelected.getValue());
+        programModel.addNewTransition(programModel.getStateAt(row), programModel.getSymbolAt(column - 1), whenSelected.getValue());
         return true;
     }
 
@@ -431,6 +432,7 @@ abstract class ActionTripleCell<T extends Component> extends JPanel {
         setLayout(new GridBagLayout());
 
         GridBagConstraints c = new GridBagConstraints();
+        c.insets = new Insets(0, 3, 0, 3);
 
         c.gridx = 0;
         c.gridy = 0;

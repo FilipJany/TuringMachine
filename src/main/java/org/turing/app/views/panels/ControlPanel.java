@@ -10,7 +10,6 @@ import javax.swing.*;
 import java.awt.*;
 
 import static javax.swing.SpringLayout.*;
-import static org.turing.app.views.constants.ExecutionStatus.CONTINUOUS_RUN;
 import static org.turing.app.views.constants.ExecutionStatus.STEP;
 
 
@@ -70,6 +69,8 @@ public class ControlPanel extends JPanel {
 
     private void setPanelProperties() {
         setPreferredSize(new Dimension(150, 70));
+        //setBackground(new Color(113, 60, 15, 0));
+        setOpaque(false);
     }
 
     private void addComponentsToPanel() {

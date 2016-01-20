@@ -73,6 +73,9 @@ public class MainFrameView {
         frame.setMinimumSize(new Dimension(ApplicationConstraints.mainFrameMinimalWidth, ApplicationConstraints.mainFrameMinimalHeight));
         frame.setLayout(layout);
         frame.addWindowListener(quitListener);
+        frame.getContentPane().setBackground(ApplicationConstraints.background);
+//        frame.getContentPane().setBackground(new Color(146, 128, 101));
+
 
         frame.addMouseListener(new MouseAdapter() {
             @Override

@@ -3,6 +3,7 @@ package org.turing.app.model;
 import org.turing.app.common.InfiniteSymbolStack;
 import org.turing.app.common.State;
 import org.turing.app.common.Symbol;
+import org.turing.support.Logger;
 
 import java.util.List;
 
@@ -11,12 +12,16 @@ import static org.turing.app.common.HaltState.HALT;
 
 public class DataModel {
 
+    private ProgramModel programModel;
+
     private InfiniteSymbolStack leftTape;
     private InfiniteSymbolStack rightTape;
     private Symbol headSymbol;
     private State state;
 
-    public DataModel() {
+    public DataModel(ProgramModel programModel) {
+        this.programModel = programModel;
+
         initialize();
     }
 
@@ -67,6 +72,10 @@ public class DataModel {
     }
 
     public void write(Symbol symbol) {
+        if (!programModel.getAvailableSymbols().contains(symbol)) {
+            Logger.error("No such " + symbol + " available in the programModel.");
+            return;
+        }
         headSymbol = symbol;
     }
 
@@ -81,6 +90,10 @@ public class DataModel {
     }
 
     public void setState(State state) {
+//        if (programModel.getAvailableStates().contains(state)) {
+//            Logger.error("No such state " + state + " available in the programModel.");
+//            return;
+//        }
         this.state = state;
     }
 

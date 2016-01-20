@@ -16,8 +16,8 @@ public class EngineTests
     @Test
     public void testBackAndForward()
     {
-        DataModel dataModel = new DataModel();
         ProgramModel programModel = new ProgramModel();
+        DataModel dataModel = new DataModel(programModel);
 
         //Fill programModel
         //Add symbols

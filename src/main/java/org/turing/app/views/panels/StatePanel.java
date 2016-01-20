@@ -9,7 +9,6 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.List;
 
-import static javax.swing.SpringLayout.HORIZONTAL_CENTER;
 import static javax.swing.SpringLayout.VERTICAL_CENTER;
 import static javax.swing.SpringLayout.WEST;
 
@@ -64,6 +63,7 @@ public class StatePanel extends JPanel {
 
     private void setPanelProperties() {
         setPreferredSize(new Dimension(150, 70));
+        setOpaque(false);
     }
 
     private void setComponentsProperties() {
