@@ -91,8 +91,8 @@ public class MainFrameView {
 
         addActionForKey(KeyEvent.VK_ENTER, "play or pause", e -> {executionController.playOrPauseDependingOnStatus();});
 
-        addActionForKey(KeyEvent.VK_LEFT, InputEvent.CTRL_DOWN_MASK, "step backward", e -> {executionController.stepBackward();});
-        addActionForKey(KeyEvent.VK_RIGHT, InputEvent.CTRL_DOWN_MASK, "step forward", e -> {executionController.stepForward();});
+        addActionForKey(KeyEvent.VK_LEFT, InputEvent.SHIFT_DOWN_MASK, "step backward", e -> {executionController.stepBackward();});
+        addActionForKey(KeyEvent.VK_RIGHT, InputEvent.SHIFT_DOWN_MASK, "step forward", e -> {executionController.stepForward();});
     }
 
     private void addActionForKey(int keyCode, String actionName, ActionListener action) {
