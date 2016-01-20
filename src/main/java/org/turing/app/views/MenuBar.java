@@ -26,13 +26,15 @@ public class MenuBar
     private final JFrame masterFrame;
     private final ProgramEditController programEditController;
     private final TapeEditController tapeEditController;
-
     private JMenuBar menuBar;
+
     private JMenu file, run, view, help;
     private JMenuItem fileNewProgram, fileLoadProgram, fileClearTape, fileLoadTape, fileSaveProgram, fileSaveTape, authors, fileDeilimiter;
     private JMenuItem runStart, runPause, runBackward, runForward, runSlower, runFaster;
     private JMenuItem viewShiftLeft, viewShiftRight;
     private JMenuItem helpUG, helpAbout, helpLicence;
+    private final JFileChooser openFileChooser;
+    private final JFileChooser saveFileChooser;
 
     public MenuBar(ImportExportController importExportController, ProgramEditController programEditController, TapeEditController tapeEditController, ExecutionController execController, DataModel dataModel, ProgramModel programModel, JFrame masterFrame)
     {
@@ -57,6 +59,10 @@ public class MenuBar
         addItemsToViewMenu();
         addItemsToHelpMenu();
 
+        openFileChooser = new JFileChooser();
+        openFileChooser.setDialogTitle("Please specify file");
+        saveFileChooser = new JFileChooser();
+        saveFileChooser.setDialogTitle("Please specify file");
         addListeners();
     }
 
@@ -265,10 +271,8 @@ public class MenuBar
 
     private ActionListener createActionWithOpenDialog(Consumer<File> actionExecutor) {
         return e -> {
-            JFileChooser fileChooser = new JFileChooser();
-            fileChooser.setDialogTitle("Please specify file");
-            if(fileChooser.showOpenDialog(fileLoadTape) == JFileChooser.APPROVE_OPTION) {
-                File file = fileChooser.getSelectedFile();
+            if(openFileChooser.showOpenDialog(fileLoadTape) == JFileChooser.APPROVE_OPTION) {
+                File file = openFileChooser.getSelectedFile();
                 try {
                     actionExecutor.accept(file);
                 } catch (RuntimeException ex) {
@@ -281,10 +285,8 @@ public class MenuBar
 
     private ActionListener createActionWithSaveDialog(Consumer<File> actionExecutor) {
         return e -> {
-            JFileChooser fileChooser = new JFileChooser();
-            fileChooser.setDialogTitle("Please specify file");
-            if(fileChooser.showSaveDialog(fileLoadTape) == JFileChooser.APPROVE_OPTION) {
-                File file = fileChooser.getSelectedFile();
+            if(saveFileChooser.showSaveDialog(fileLoadTape) == JFileChooser.APPROVE_OPTION) {
+                File file = saveFileChooser.getSelectedFile();
                 try {
                     actionExecutor.accept(file);
                 } catch (RuntimeException ex) {
