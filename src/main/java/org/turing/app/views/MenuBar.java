@@ -10,8 +10,8 @@ import org.turing.support.Logger;
 import org.turing.support.LoggerGUI;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.util.function.Consumer;
 
 /**
@@ -182,7 +182,7 @@ public class MenuBar
 
     private void addRunStartListener()
     {
-        runStart.addActionListener(e-> execController.play());
+        runStart.addActionListener(e -> execController.play());
     }
 
     private void addRunPauseListener()
@@ -192,7 +192,7 @@ public class MenuBar
 
     private void addRunBackwardListener()
     {
-        runBackward.addActionListener(e-> execController.stepBackward());
+        runBackward.addActionListener(e -> execController.stepBackward());
     }
 
     private void addRunForwardListener()
@@ -202,12 +202,12 @@ public class MenuBar
 
     private void addRunFasterListener()
     {
-        runFaster.addActionListener(e-> execController.updateStepDelay(execController.getExecutionDelay()-1));
+        runFaster.addActionListener(e -> execController.updateStepDelay(execController.getExecutionDelay() - 1));
     }
 
     private void addRunSlowerListener()
     {
-        runSlower.addActionListener(e-> execController.updateStepDelay(execController.getExecutionDelay()+1));
+        runSlower.addActionListener(e -> execController.updateStepDelay(execController.getExecutionDelay() + 1));
     }
 
     private void addAuthorsListener()
@@ -232,35 +232,61 @@ public class MenuBar
     }
 
     private void addProgramExportListener() {
-        fileSaveProgram.addActionListener(createActionWithFilenameInputDialog(
-                filename -> {importExportController.exportProgram(filename);}
+        fileSaveProgram.addActionListener(createActionWithSaveDialog(
+                filename -> {
+                    importExportController.exportProgram(filename);
+                }
         ));
     }
 
     private void addTapeExportListener() {
-        fileSaveTape.addActionListener(createActionWithFilenameInputDialog(
-                filename -> {importExportController.exportTape(filename);}
+        fileSaveTape.addActionListener(createActionWithSaveDialog(
+                filename -> {
+                    importExportController.exportTape(filename);
+                }
         ));
     }
 
     private void addProgramImportListener() {
-        fileLoadProgram.addActionListener(createActionWithFilenameInputDialog(
-                filename -> {importExportController.importProgram(filename);}
+        fileLoadProgram.addActionListener(createActionWithOpenDialog(
+                filename -> {
+                    importExportController.importProgram(filename);
+                }
         ));
     }
 
     private void addTapeImportListener() {
-        fileLoadTape.addActionListener(createActionWithFilenameInputDialog(
-                filename -> {importExportController.importTape(filename);}
+        fileLoadTape.addActionListener(createActionWithOpenDialog(
+                filename -> {
+                    importExportController.importTape(filename);
+                }
         ));
     }
 
-    private ActionListener createActionWithFilenameInputDialog(Consumer<String> actionExecutor) {
+    private ActionListener createActionWithOpenDialog(Consumer<File> actionExecutor) {
         return e -> {
-            String filename = JOptionPane.showInputDialog("Please specify filename");
-            if (filename != null) {
+            JFileChooser fileChooser = new JFileChooser();
+            fileChooser.setDialogTitle("Please specify file");
+            if(fileChooser.showOpenDialog(fileLoadTape) == JFileChooser.APPROVE_OPTION) {
+                File file = fileChooser.getSelectedFile();
                 try {
-                    actionExecutor.accept(filename);
+                    actionExecutor.accept(file);
+                } catch (RuntimeException ex) {
+                    Logger.error(ex);
+                    JOptionPane.showMessageDialog(null, "An error occurred: " + ex.getMessage(), "error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        };
+    }
+
+    private ActionListener createActionWithSaveDialog(Consumer<File> actionExecutor) {
+        return e -> {
+            JFileChooser fileChooser = new JFileChooser();
+            fileChooser.setDialogTitle("Please specify file");
+            if(fileChooser.showSaveDialog(fileLoadTape) == JFileChooser.APPROVE_OPTION) {
+                File file = fileChooser.getSelectedFile();
+                try {
+                    actionExecutor.accept(file);
                 } catch (RuntimeException ex) {
                     Logger.error(ex);
                     JOptionPane.showMessageDialog(null, "An error occurred: " + ex.getMessage(), "error", JOptionPane.ERROR_MESSAGE);

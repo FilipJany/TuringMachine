@@ -19,7 +19,7 @@ import javax.swing.*;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 
-import static org.turing.app.common.HaltState.*;
+import static org.turing.app.common.HaltState.HALT;
 
 public class ExecutionController {
     private final ProgramModel programModel;
@@ -164,6 +164,14 @@ public class ExecutionController {
             executionModel.setExecutionStatus(ExecutionStatus.CONTINUOUS_STOP);
             this.notify();
             refreshControlPanel();
+        }
+    }
+
+    public void playOrPauseDependingOnStatus() {
+        if (executionModel.getExecutionStatus() == ExecutionStatus.CONTINUOUS_RUN) {
+            pause();
+        } else {
+            play();
         }
     }
 

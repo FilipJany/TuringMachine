@@ -23,15 +23,13 @@ public class Importer {
         this.tapeImporter = tapeImporter;
     }
 
-    public void importProgramFromFile(String filename) {
-        File file = new File(filename);
+    public void importProgramFromFile(File file) {
         JSONObject jsonObject = readJson(file);
 
         programImporter.readIntoModel(jsonObject);
     }
 
-    public void importTapeFromFile(String filename) {
-        File file = new File(filename);
+    public void importTapeFromFile(File file) {
         JSONObject jsonObject = readJson(file);
 
         tapeImporter.readIntoModel(jsonObject);

@@ -109,8 +109,6 @@ public class TapePanel extends JPanel {
     private void placeButtonsOnPanel() {
         JTextField middleTextField = tape.get(tape.size() / 2);
 
-        middleTextField.requestFocus();
-
         layout.putConstraint(HORIZONTAL_CENTER, head, 0, HORIZONTAL_CENTER, middleTextField);
         layout.putConstraint(NORTH, head, -10, NORTH, this);
 

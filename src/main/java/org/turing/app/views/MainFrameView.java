@@ -18,6 +18,7 @@ import org.turing.support.LoggerGUI;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.File;
 
 import static javax.swing.SpringLayout.*;
 
@@ -72,23 +73,36 @@ public class MainFrameView {
         frame.setMinimumSize(new Dimension(ApplicationConstraints.mainFrameMinimalWidth, ApplicationConstraints.mainFrameMinimalHeight));
         frame.setLayout(layout);
         frame.addWindowListener(quitListener);
+
+        frame.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                contentPanel.requestFocus();
+            }
+        });
     }
 
     private void createKeyBindings() {
+        addActionForKey(KeyEvent.VK_LEFT, InputEvent.ALT_DOWN_MASK, "move tape right", e -> {tapeEditController.moveRight();});
+        addActionForKey(KeyEvent.VK_RIGHT, InputEvent.ALT_DOWN_MASK, "move tape left", e -> {tapeEditController.moveLeft();});
+
+        addActionForKey(KeyEvent.VK_ENTER, "play or pause", e -> {executionController.playOrPauseDependingOnStatus();});
+
+        addActionForKey(KeyEvent.VK_LEFT, InputEvent.CTRL_DOWN_MASK, "step backward", e -> {executionController.stepBackward();});
+        addActionForKey(KeyEvent.VK_RIGHT, InputEvent.CTRL_DOWN_MASK, "step forward", e -> {executionController.stepForward();});
+    }
+
+    private void addActionForKey(int keyCode, String actionName, ActionListener action) {
+        addActionForKey(keyCode, 0, actionName, action);
+    }
+
+    private void addActionForKey(int keyCode, int keyMask, String actionName, ActionListener action) {
         contentPanel.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT)
-                .put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, InputEvent.ALT_DOWN_MASK), "move tape left");
-        contentPanel.getActionMap().put("move tape left", new AbstractAction() {
+                .put(KeyStroke.getKeyStroke(keyCode, keyMask), actionName);
+        contentPanel.getActionMap().put(actionName, new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                tapeEditController.moveRight();
-            }
-        });
-        contentPanel.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT)
-                .put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, InputEvent.ALT_DOWN_MASK), "move tape right");
-        contentPanel.getActionMap().put("move tape right", new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                tapeEditController.moveLeft();
+                action.actionPerformed(e);
             }
         });
     }
@@ -205,9 +219,9 @@ public class MainFrameView {
                 String programFileName = LoggerGUI.showInputDialog(frame, "Program file name:", "Program Save Dialog");
                 String tapeFileName = LoggerGUI.showInputDialog(frame, "Data file name:", "Data Save Dialog");
                 if(programFileName != null)
-                    importExportController.exportProgram(programFileName);
+                    importExportController.exportProgram(new File(programFileName));
                 if(tapeFileName != null)
-                    importExportController.exportTape(tapeFileName);
+                    importExportController.exportTape(new File(tapeFileName));
             }
             System.exit(0);
         }

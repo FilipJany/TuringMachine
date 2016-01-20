@@ -14,11 +14,10 @@ import org.turing.support.LoggerGUI;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
-import java.util.function.Consumer;
+import java.io.File;
 
 import static javax.swing.SpringLayout.*;
 
@@ -117,9 +116,9 @@ public class ProgramFrameView {
                 String programFileName = LoggerGUI.showInputDialog(frame, "Program file name:", "Program Save Dialog");
                 String tapeFileName = LoggerGUI.showInputDialog(frame, "Data file name:", "Data Save Dialog");
                 if(programFileName != null)
-                    importExportController.exportProgram(programFileName);
+                    importExportController.exportProgram(new File(programFileName));
                 if(tapeFileName != null)
-                    importExportController.exportTape(tapeFileName);
+                    importExportController.exportTape(new File(tapeFileName));
             }
             System.exit(0);
         }
