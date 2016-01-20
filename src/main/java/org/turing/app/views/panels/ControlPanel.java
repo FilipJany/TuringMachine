@@ -3,6 +3,8 @@ package org.turing.app.views.panels;
 import org.turing.app.controllers.ExecutionController;
 import org.turing.app.views.constants.ApplicationConstraints;
 import org.turing.app.views.constants.ExecutionStatus;
+import org.turing.app.views.elements.RoundButton;
+import org.turing.support.ResourceProvider;
 
 import javax.swing.*;
 import java.awt.*;
@@ -59,11 +61,11 @@ public class ControlPanel extends JPanel {
 
     private void createControlPanel() {
         //TODO:Replace with proper images
-        playButton = new JButton("►");
-        pauseButton = new JButton("<html><b>ll<b/></html>");
-        forwardButton = new JButton(">");
-        backwardButton = new JButton("<");
-        resetButton = new JButton("C");
+        playButton = new RoundButton(ResourceProvider.getIcon("button_play_active.png"), ResourceProvider.getIcon("button_play_mouse.png"), ResourceProvider.getIcon("button_play_clicked.png"));
+        pauseButton = new RoundButton(ResourceProvider.getIcon("button_pause_active.png"), ResourceProvider.getIcon("button_pause_mouse.png"), ResourceProvider.getIcon("button_pause_clicked.png"));
+        forwardButton = new RoundButton(ResourceProvider.getIcon("button_forward_active.png"), ResourceProvider.getIcon("button_forward_mouse.png"), ResourceProvider.getIcon("button_forward_clicked.png"));
+        backwardButton = new RoundButton(ResourceProvider.getIcon("button_back_active.png"), ResourceProvider.getIcon("button_back_mouse.png"), ResourceProvider.getIcon("button_back_clicked.png"));
+        resetButton =  new RoundButton(ResourceProvider.getIcon("button_clear_active.png"), ResourceProvider.getIcon("button_clear_mouse.png"), ResourceProvider.getIcon("button_clear_clicked.png"));
     }
 
     private void setPanelProperties() {
@@ -98,25 +100,25 @@ public class ControlPanel extends JPanel {
         layout.putConstraint(NORTH, pauseButton, 5, NORTH, this);
 
         backwardButton.setPreferredSize(new Dimension(ApplicationConstraints.buttonWidth, ApplicationConstraints.buttonHeight));
-        layout.putConstraint(EAST, backwardButton, -10, WEST, forwardButton);
+        layout.putConstraint(EAST, backwardButton, -10, WEST, playButton);
         layout.putConstraint(NORTH, backwardButton, 5, NORTH, this);
 
         setLayout(layout);
     }
 
     private void setComponentsProperties() {
-        playButton.setMinimumSize(new Dimension(ApplicationConstraints.minimalButtonWidth, ApplicationConstraints.minimalButtonHeight));
-        pauseButton.setMinimumSize(new Dimension(ApplicationConstraints.minimalButtonWidth, ApplicationConstraints.minimalButtonHeight));
-        forwardButton.setMinimumSize(new Dimension(ApplicationConstraints.minimalButtonWidth, ApplicationConstraints.minimalButtonHeight));
-        backwardButton.setMinimumSize(new Dimension(ApplicationConstraints.minimalButtonWidth, ApplicationConstraints.minimalButtonHeight));
-        resetButton.setMinimumSize(new Dimension(ApplicationConstraints.minimalButtonWidth, ApplicationConstraints.minimalButtonHeight));
+//        playButton.setMinimumSize(new Dimension(ApplicationConstraints.minimalButtonWidth, ApplicationConstraints.minimalButtonHeight));
+//        pauseButton.setMinimumSize(new Dimension(ApplicationConstraints.minimalButtonWidth, ApplicationConstraints.minimalButtonHeight));
+//        forwardButton.setMinimumSize(new Dimension(ApplicationConstraints.minimalButtonWidth, ApplicationConstraints.minimalButtonHeight));
+//        backwardButton.setMinimumSize(new Dimension(ApplicationConstraints.minimalButtonWidth, ApplicationConstraints.minimalButtonHeight));
+//        resetButton.setMinimumSize(new Dimension(ApplicationConstraints.minimalButtonWidth, ApplicationConstraints.minimalButtonHeight));
     }
 
     private void addListeners() {
         playButton.addActionListener(a -> executionController.play());
         pauseButton.addActionListener(a -> executionController.pause());
         forwardButton.addActionListener(a -> executionController.stepForward());
-        backwardButton.addActionListener(a-> executionController.stepBackward());
+        backwardButton.addActionListener(a -> executionController.stepBackward());
         resetButton.addActionListener(a -> executionController.clear());
     }
 }

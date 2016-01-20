@@ -212,8 +212,10 @@ public class ResourceProvider {
 
         if (path != null)
             return new ImageIcon(path);
-        else
+        else {
+            Logger.error("Icon " + name + " not found.");
             return null;
+        }
     }
 
     /**
@@ -594,15 +596,15 @@ public class ResourceProvider {
         /**
          * Images location relative to provider.
          */
-        static final String IMAGES_PATH = "images/";
+        static final String IMAGES_PATH = "/images/";
         /**
          * Icons location relative to provider.
          */
-        static final String ICONS_PATH = "icons/";
+        static final String ICONS_PATH = "/icons/";
         /**
          * Sound location relative to provider
          */
-        static final String AUDIO_PATH = "audio/";
+        static final String AUDIO_PATH = "/audio/";
         /**
          * DefaultSettings location relative to provider
          */

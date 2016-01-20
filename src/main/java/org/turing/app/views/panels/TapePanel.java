@@ -4,6 +4,7 @@ import org.turing.app.common.Symbol;
 import org.turing.app.controllers.TapeEditController;
 import org.turing.app.exceptions.TapeException;
 import org.turing.app.views.constants.ApplicationConstraints;
+import org.turing.support.ResourceProvider;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -87,7 +88,7 @@ public class TapePanel extends JPanel {
         layout = new SpringLayout();
         leftButton = new JButton("<");
         rightButton = new JButton(">");
-        head = new JLabel();
+        head = new JLabel(ResourceProvider.getIcon("head.png"));
         tape = new LinkedList<>();
         for (int i = 0; i < ApplicationConstraints.TapeSize; ++i)
             tape.add(new JTextField("" + i));
@@ -110,7 +111,7 @@ public class TapePanel extends JPanel {
         JTextField middleTextField = tape.get(tape.size() / 2);
 
         layout.putConstraint(HORIZONTAL_CENTER, head, 0, HORIZONTAL_CENTER, middleTextField);
-        layout.putConstraint(NORTH, head, -10, NORTH, this);
+        layout.putConstraint(NORTH, head, 10, NORTH, this);
 
         layout.putConstraint(HORIZONTAL_CENTER, middleTextField, 0, HORIZONTAL_CENTER, this);
         layout.putConstraint(NORTH, middleTextField, 5, SOUTH, head);
@@ -139,9 +140,9 @@ public class TapePanel extends JPanel {
             tf.setPreferredSize(new Dimension(ApplicationConstraints.textFieldWidth, ApplicationConstraints.textFieldHigh));
 
 
-        head.setOpaque(true);
+        head.setOpaque(false);
         head.setBackground(Color.BLACK);
-        head.setPreferredSize(new Dimension(10, 30));
+        head.setPreferredSize(new Dimension(80, 35));
 
         leftButton.setPreferredSize(new Dimension(50, 30));
         rightButton.setPreferredSize(new Dimension(50, 30));
