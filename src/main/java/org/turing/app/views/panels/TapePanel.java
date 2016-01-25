@@ -4,6 +4,7 @@ import org.turing.app.common.Symbol;
 import org.turing.app.controllers.TapeEditController;
 import org.turing.app.exceptions.TapeException;
 import org.turing.app.views.constants.ApplicationConstraints;
+import org.turing.app.views.elements.AnimatedButton;
 import org.turing.support.ResourceProvider;
 
 import javax.swing.*;
@@ -26,7 +27,7 @@ public class TapePanel extends JPanel {
     private int width, height;
     private JButton leftButton, rightButton;
     private List<JTextField> tape;
-    private JLabel head;
+    private JLabel headTop, headBottom;
     private SpringLayout layout;
 
     private boolean interiorModification;
@@ -82,13 +83,12 @@ public class TapePanel extends JPanel {
         addListeners();
     }
 
-
-
     private void createTapePanel() {
         layout = new SpringLayout();
-        leftButton = new JButton("<");
-        rightButton = new JButton(">");
-        head = new JLabel(ResourceProvider.getIcon("head.png"));
+        leftButton = new AnimatedButton(ResourceProvider.getIcon("button_tape_left_active.png"), ResourceProvider.getIcon("button_tape_left_mouse.png"), ResourceProvider.getIcon("button_tape_left_clicked.png"));
+        rightButton = new AnimatedButton(ResourceProvider.getIcon("button_tape_right_active.png"), ResourceProvider.getIcon("button_tape_right_mouse.png"), ResourceProvider.getIcon("button_tape_right_clicked.png"));
+        headTop = new JLabel(ResourceProvider.getIcon("head_top.png"));
+        headBottom = new JLabel(ResourceProvider.getIcon("head_bottom.png"));
         tape = new LinkedList<>();
         for (int i = 0; i < ApplicationConstraints.TapeSize; ++i)
             tape.add(new JTextField("" + i));
@@ -105,17 +105,22 @@ public class TapePanel extends JPanel {
         for (int i = 0; i < ApplicationConstraints.TapeSize; ++i)
             add(tape.get(i));
         add(rightButton);
-        add(head);
+        add(headTop);
+        add(headBottom);
     }
+
 
     private void placeButtonsOnPanel() {
         JTextField middleTextField = tape.get(tape.size() / 2);
 
-        layout.putConstraint(HORIZONTAL_CENTER, head, 0, HORIZONTAL_CENTER, middleTextField);
-        layout.putConstraint(NORTH, head, 10, NORTH, this);
+        layout.putConstraint(HORIZONTAL_CENTER, headTop, -2, HORIZONTAL_CENTER, middleTextField);
+        layout.putConstraint(SOUTH, headTop, 0, NORTH, middleTextField);
+
+        layout.putConstraint(HORIZONTAL_CENTER, headBottom, -2, HORIZONTAL_CENTER, middleTextField);
+        layout.putConstraint(NORTH, headBottom, 0, SOUTH, middleTextField);
 
         layout.putConstraint(HORIZONTAL_CENTER, middleTextField, 0, HORIZONTAL_CENTER, this);
-        layout.putConstraint(NORTH, middleTextField, 5, SOUTH, head);
+        layout.putConstraint(VERTICAL_CENTER, middleTextField, 0, VERTICAL_CENTER, this);
 
         for (int i = tape.size() / 2 - 1; i >= 0; i--) {
             layout.putConstraint(EAST, tape.get(i), -10, WEST, tape.get(i + 1));
@@ -127,26 +132,37 @@ public class TapePanel extends JPanel {
             layout.putConstraint(BASELINE, tape.get(i), 0, BASELINE, middleTextField);
         }
 
-        layout.putConstraint(WEST, leftButton, 10, WEST, this);
         layout.putConstraint(EAST, leftButton, -10, WEST, tape.get(0));
-        layout.putConstraint(BASELINE, leftButton, 0, BASELINE, middleTextField);
+        layout.putConstraint(VERTICAL_CENTER, leftButton, 0, VERTICAL_CENTER, middleTextField);
 
-        layout.putConstraint(EAST, rightButton, -10, EAST, this);
         layout.putConstraint(WEST, rightButton, 10, EAST, tape.get(tape.size() - 1));
-        layout.putConstraint(BASELINE, rightButton, 0, BASELINE, middleTextField);
+        layout.putConstraint(VERTICAL_CENTER, rightButton, 0, VERTICAL_CENTER, middleTextField);
     }
 
     private void setComponentsProperties() {
-        for (JTextField tf : tape)
-            tf.setPreferredSize(new Dimension(ApplicationConstraints.textFieldWidth, ApplicationConstraints.textFieldHigh));
+        for (JTextField tf : tape) {
+            tf.setPreferredSize(new Dimension(
+                    ApplicationConstraints.textFieldWidth,
+                    ApplicationConstraints.textFieldHeight));
+            tf.setFont(ApplicationConstraints.tapeFont);
+            tf.setHorizontalAlignment(JTextField.CENTER);
+            tf.setForeground(ApplicationConstraints.tapeForeground);
+        }
 
+        JTextField middleTextField = tape.get(tape.size() / 2);
+        middleTextField.setForeground(ApplicationConstraints.headForeground);
 
-        head.setOpaque(false);
-        head.setBackground(Color.BLACK);
-        head.setPreferredSize(new Dimension(80, 35));
+        headTop.setOpaque(false);
+        headTop.setBackground(Color.BLACK);
+        headTop.setPreferredSize(new Dimension(80, 35));
 
-        leftButton.setPreferredSize(new Dimension(50, 30));
-        rightButton.setPreferredSize(new Dimension(50, 30));
+        headBottom.setOpaque(false);
+        headBottom.setBackground(Color.BLACK);
+        headBottom.setPreferredSize(new Dimension(80, 35));
+
+        leftButton.setPreferredSize(ApplicationConstraints.tapeMoveButtonDim);
+        rightButton.setPreferredSize(ApplicationConstraints.tapeMoveButtonDim);
+
     }
 
     private void addListeners() {

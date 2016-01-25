@@ -15,14 +15,18 @@ public  class ApplicationConstraints
     public final static int mainFrameMinimalWidth = 770, mainFrameMinimalHeight = 300;
     public final static int mainFrameStartLocationX = 30, mainFrameStartLocationY = 30;
     //ControlPanel
-    public final static int minimalControlPanelWidth = 350, minimalControlPanelHeight = 80, buttonHeight = 30, buttonWidth = 80, minimalButtonHeight = 20, minimalButtonWidth = 50;
+    public final static int minimalControlPanelWidth = 350, minimalControlPanelHeight = 80, buttonHeight = 30, buttonWidth = 80;
     //SliderPanel
     public final static int sliderMinValue = ExecutionModel.MIN_DELAY, sliderInitValue = ExecutionModel.MAX_DELAY /2, sliderMaxValue = ExecutionModel.MAX_DELAY, sliderStep = 5, sliderSteppie = 1;
     public static int sliderPanelMinimalWidth = 350, sliderPanelMinimalHeight = 80;
     public static String sliderSpeedLabelPrefix = "Current speed multiplier: x";
     //Tape Panel
-    public final static int minimalTapePanelWidth = 500, minimalTapePanelHeight = 200, textFieldHigh = 30, textFieldWidth = 30;
+    public final static int minimalTapePanelWidth = 500, minimalTapePanelHeight = 200, textFieldHeight = 25, textFieldWidth = 25;
+    public final static Dimension tapeMoveButtonDim = new Dimension(50, 25);
     public static int TapeSize = 15;
+    public static final Font tapeFont = new Font("Courier New", Font.BOLD, 14);
+    public static final Color tapeForeground = new Color(0x5d, 0x4a, 0x35);
+    public static final Color headForeground = new Color(0, 0, 0);
     //ProgramFrame
     public final static int programFrameMinimalWidth = 600, programFrameMinimalHeight = 300;
     public final static int programFrameStartLocationX = 810, programFrameStartLocationY = 30;
